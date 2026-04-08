@@ -1,12 +1,792 @@
-<div class="card" onclick="showHW('hw1ci')">
-  <div class="card-top">
-    <span class="card-week">HW 1</span>
-    <span class="card-status status-wip">In Progress</span>
-  </div>
-  <div class="card-thumb">📝</div>
-  <div class="card-title">HW #1 CI Reports</div>
-  <div class="card-desc">Interview transcripts and CI report sections for the usability evaluation of the two cultural websites.</div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UX Group 3</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<!-- Updated Count -->
-<p>2 items</p>
+    :root {
+      --bg: #f5f4f0;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f0efeb;
+      --text-primary: #1a1a18;
+      --text-secondary: #6b6b66;
+      --text-tertiary: #9a9a94;
+      --border: rgba(0,0,0,0.1);
+      --border-hover: rgba(0,0,0,0.2);
+      --green: #1D9E75;
+      --green-light: #E1F5EE;
+      --green-dark: #0F6E56;
+      --blue: #185FA5;
+      --blue-light: #E6F1FB;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+
+    /* NAV */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      border-bottom: 0.5px solid var(--border);
+      background: var(--bg-primary);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+
+    /* HERO */
+    .hero {
+      padding: 4rem 2rem 3rem;
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-light);
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      font-weight: 400;
+    }
+    .hero h1 em {
+      color: var(--green);
+      font-style: normal;
+    }
+    .hero p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+    .hero-meta-item strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* SECTION */
+    .section {
+      max-width: 860px;
+      margin: 3rem auto 0;
+      padding: 0 2rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      border-bottom: 0.5px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    .section-count {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* ASSIGNMENT GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .card:hover {
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .card-week {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+    .card-status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+    .status-wip {
+      background: #FAEEDA;
+      color: #854F0B;
+    }
+    .status-done {
+      background: var(--green-light);
+      color: var(--green-dark);
+    }
+    .card-thumb {
+      height: 80px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #E1F5EE 0%, #9FE1CB 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-top: 4px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* HW DETAIL */
+    .hw-header {
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .hw-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+    .hw-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      font-weight: 400;
+    }
+    .back-btn {
+      font-size: 13px;
+      color: var(--green);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+    .back-btn:hover { text-decoration: underline; }
+    .ref-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .ref-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .ref-link:hover { opacity: 0.8; }
+
+    /* SCENARIOS */
+    .scenarios {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 600px) {
+      .scenarios { grid-template-columns: 1fr; }
+    }
+    .scenario-card {
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .scenario-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .s1-label { color: var(--green-dark); }
+    .s2-label { color: #534AB7; }
+    .scenario-icon { font-size: 24px; }
+    .scenario-title {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .scenario-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* QUESTIONS */
+    .phase-block { margin-bottom: 1.5rem; }
+    .phase-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .q-item {
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-bottom: 8px;
+      display: flex;
+      gap: 12px;
+    }
+    .q-num {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green);
+      min-width: 20px;
+      padding-top: 1px;
+    }
+    .q-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-primary);
+    }
+
+    /* MEMBERS */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .member-card {
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .member-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .av1 { background: #E1F5EE; color: #0F6E56; }
+    .av2 { background: #EEEDFE; color: #534AB7; }
+    .av3 { background: #FAEEDA; color: #854F0B; }
+    .av4 { background: #FAECE7; color: #993C1D; }
+    .member-name { font-size: 14px; font-weight: 500; }
+    .member-id { font-size: 12px; color: var(--text-tertiary); }
+    .member-email {
+      font-size: 12px;
+      color: var(--blue);
+      word-break: break-all;
+    }
+
+    /* TRANSCRIPTS & CI REPORT */
+    .transcript-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .transcript-card {
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .transcript-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .transcript-title {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .transcript-meta {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+    .transcript-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .transcript-line {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-primary);
+    }
+    .transcript-note {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+    }
+    .ts {
+      color: var(--green);
+      font-weight: 500;
+      margin-right: 8px;
+    }
+    .speaker {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .placeholder-box {
+      background: var(--bg-primary);
+      border: 0.5px dashed var(--border-hover);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-logo">UX <span>Group 3</span></div>
+    <div class="nav-links">
+      <a onclick="showHome()">Assignments</a>
+      <a onclick="showHome(); setTimeout(()=>document.getElementById('members-sec').scrollIntoView({behavior:'smooth'}),50)">Members</a>
+    </div>
+  </nav>
+
+  <!-- HOME VIEW -->
+  <div id="home-view">
+    <div class="hero">
+      <div class="hero-badge"><div class="hero-badge-dot"></div>UX Design · Group 3</div>
+      <h1>Design starts<br>with <em>people</em></h1>
+      <p>We are Group 3, focused on human-centered design thinking. This site documents our weekly assignments and design journey.</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item"><strong>Semester</strong> Spring 2025</div>
+        <div class="hero-meta-item"><strong>Course</strong> UX Design</div>
+        <div class="hero-meta-item"><strong>Members</strong> 4</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">Assignments</span>
+        <span class="section-count">2 items</span>
+      </div>
+      <div class="grid">
+        <div class="card" onclick="showHW('hw1')">
+          <div class="card-top">
+            <span class="card-week">HW 1.1</span>
+            <span class="card-status status-wip">In Progress</span>
+          </div>
+          <div class="card-thumb">📋</div>
+          <div class="card-title">Group3_HW1.1 — To-Do</div>
+          <div class="card-desc">UX evaluation of Taiwan's World Heritage &amp; Ministry of Culture websites across 2 scenarios and 10 interview questions.</div>
+        </div>
+
+        <div class="card" onclick="showHW('hw1ci')">
+          <div class="card-top">
+            <span class="card-week">HW 1</span>
+            <span class="card-status status-wip">In Progress</span>
+          </div>
+          <div class="card-thumb">📝</div>
+          <div class="card-title">HW #1 CI Reports</div>
+          <div class="card-desc">Interview transcripts and CI report sections for the usability evaluation of the two cultural websites.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="members-sec" style="margin-top:2.5rem;">
+      <div class="section-header">
+        <span class="section-title">Members</span>
+        <span class="section-count">4 members</span>
+      </div>
+      <div class="members-grid">
+        <div class="member-card">
+          <div class="member-top">
+            <div class="avatar av1">何</div>
+            <div>
+              <div class="member-name">何語倢</div>
+              <div class="member-id">112306008</div>
+            </div>
+          </div>
+          <div class="member-email">112306008@g.nccu.edu.tw</div>
+        </div>
+
+        <div class="member-card">
+          <div class="member-top">
+            <div class="avatar av2">張</div>
+            <div>
+              <div class="member-name">張怡玲</div>
+              <div class="member-id">112306010</div>
+            </div>
+          </div>
+          <div class="member-email">112306010@g.nccu.edu.tw</div>
+        </div>
+
+        <div class="member-card">
+          <div class="member-top">
+            <div class="avatar av3">陳</div>
+            <div>
+              <div class="member-name">陳旻妤</div>
+              <div class="member-id">112306070</div>
+            </div>
+          </div>
+          <div class="member-email">112306070@g.nccu.edu.tw</div>
+        </div>
+
+        <div class="member-card">
+          <div class="member-top">
+            <div class="avatar av4">蔡</div>
+            <div>
+              <div class="member-name">蔡芝帆</div>
+              <div class="member-id">112703026</div>
+            </div>
+          </div>
+          <div class="member-email">112703026@g.nccu.edu.tw</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HW 1.1 DETAIL VIEW -->
+  <div id="hw1" style="display:none;">
+    <div class="section" style="margin-top:2.5rem;">
+      <div class="hw-header">
+        <div class="hw-title-row">
+          <button class="back-btn" onclick="showHome()">← Back</button>
+          <span class="card-status status-wip">In Progress</span>
+        </div>
+        <div class="hw-title">Group3 HW #1.1 — To-Do</div>
+        <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">UX evaluation of two government cultural websites through scenario-based user interviews.</p>
+        <div class="ref-links">
+          <a class="ref-link" href="https://twh.boch.gov.tw/home.aspx" target="_blank">🌐 Taiwan World Heritage Potential Sites</a>
+          <a class="ref-link" href="https://www.moc.gov.tw/en/" target="_blank">🏛 Ministry of Culture — Who We Are</a>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <span class="section-title">Scenarios</span>
+        <span class="section-count">2</span>
+      </div>
+      <div class="scenarios">
+        <div class="scenario-card">
+          <div class="scenario-label s1-label">Scenario 1</div>
+          <div class="scenario-icon">✈️</div>
+          <div class="scenario-title">Foreign tourist planning a 3-day cultural trip</div>
+          <div class="scenario-body">Browse the MOC English website for a general overview of Taiwan's cultural heritage, then switch to the Taiwan World Heritage Potential Sites website to find a site of interest (e.g., Kinmen Battlefield or Beinan Site), and evaluate if the information is sufficient to plan a concrete travel itinerary.</div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-label s2-label">Scenario 2</div>
+          <div class="scenario-icon">📚</div>
+          <div class="scenario-title">Student researching Taiwan's Cultural Preservation Policies</div>
+          <div class="scenario-body">Find the detailed historical background of a specific site (e.g., Beinan Site) on the Taiwan World Heritage Potential Sites website, then search for relevant preservation laws or official announcements on the MOC website to support academic research.</div>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top:2rem;">
+        <span class="section-title">Interview Questions</span>
+        <span class="section-count">10 questions</span>
+      </div>
+
+      <div class="phase-block">
+        <div class="phase-label">Phase 1 — Warm-up &amp; Behavioral Context</div>
+        <div class="q-item"><span class="q-num">Q1</span><span class="q-text">When planning a deep cultural trip or looking for academic data, do you usually start with a search engine (like Google) or go directly to an official government website? Why?</span></div>
+        <div class="q-item"><span class="q-num">Q2</span><span class="q-text">What are the most common frustrations you've experienced when using official government or cultural websites? (e.g., outdated info, "bureaucratic" interface, or lack of actionable steps?)</span></div>
+      </div>
+
+      <div class="phase-block">
+        <div class="phase-label">Phase 2 — Initial Visual &amp; Brand Impression</div>
+        <div class="q-item"><span class="q-num">Q3</span><span class="q-text">Upon opening these two websites, does the overall visual style (colors, layout) feel more like an "engaging travel brochure" or a "formal government archive"?</span></div>
+        <div class="q-item"><span class="q-num">Q4</span><span class="q-text">Looking at the homepage menus, is it immediately clear to you where to find "attractions" versus "laws and regulations"?</span></div>
+      </div>
+
+      <div class="phase-block">
+        <div class="phase-label">Phase 3 — Feedback for Scenario 1 (Travel Planning)</div>
+        <div class="q-item"><span class="q-num">Q5</span><span class="q-text">While browsing the potential sites, which elements (e.g., photos, historical stories, maps) were most effective in making you want to visit the site in person?</span></div>
+        <div class="q-item"><span class="q-num">Q6</span><span class="q-text">When trying to turn a site into a "travel itinerary," do you feel the information is complete? Are there missing details like opening hours, ticket prices, or precise Google Maps links?</span></div>
+      </div>
+
+      <div class="phase-block">
+        <div class="phase-label">Phase 4 — Feedback for Scenario 2 (Academic Search)</div>
+        <div class="q-item"><span class="q-num">Q7</span><span class="q-text">When switching from the Heritage site to the MOC site, did the transition feel seamless, or did it feel like using two completely unrelated systems?</span></div>
+        <div class="q-item"><span class="q-num">Q8</span><span class="q-text">Regarding the MOC English site, do you find the descriptions easy to understand, or do they feel filled with difficult "officialese" or direct translations?</span></div>
+      </div>
+
+      <div class="phase-block">
+        <div class="phase-label">Phase 5 — Wrap-up &amp; Future Improvements</div>
+        <div class="q-item"><span class="q-num">Q9</span><span class="q-text">If these websites included an AI assistant to summarize "heavy regulations" or "long histories" into "TL;DR summaries" or "suggested routes," how helpful would that be to you?</span></div>
+        <div class="q-item"><span class="q-num">Q10</span><span class="q-text">Based on today's experience, if you could change only one thing to improve your satisfaction, would it be the "interface design" or the "utility of the content"?</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HW #1 CI REPORTS -->
+  <div id="hw1ci" style="display:none;">
+    <div class="section" style="margin-top:2.5rem;">
+      <div class="hw-header">
+        <div class="hw-title-row">
+          <button class="back-btn" onclick="showHome()">← Back</button>
+          <span class="card-status status-wip">In Progress</span>
+        </div>
+        <div class="hw-title">HW #1 CI Reports</div>
+        <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">
+          Includes interview transcripts and CI report sections for our website evaluation project.
+        </p>
+      </div>
+
+      <div class="section-header">
+        <span class="section-title">Interview Transcripts</span>
+        <span class="section-count">3 transcripts</span>
+      </div>
+
+      <div class="transcript-list">
+        <div class="transcript-card">
+          <div class="transcript-header">
+            <div class="transcript-title">Transcript 1</div>
+            <div class="transcript-meta">Interview record</div>
+          </div>
+
+          <div class="transcript-note">
+            Scenario: The participant imagines being a foreign tourist planning a three-day trip in Taiwan and uses the Ministry of Culture English website and the Taiwan World Heritage Potential Sites website to explore cultural attractions and build a simple itinerary.
+          </div>
+
+          <div class="transcript-body">
+            <div class="transcript-line"><span class="ts">(0:00)</span><span class="speaker">訪談者：</span>好的，那請你想像你現在自己是一個外國的觀光客，然後你在規劃一個三天的臺灣旅行，你想要找一個很棒的文化景點，請你先看一下我們文化部的英文網站，然後去我們瞭解一下臺灣文化的大概的內容，所以你現在先稍微看一下這個網站。</div>
+
+            <div class="transcript-note">（受訪者瀏覽網站中）</div>
+
+            <div class="transcript-line"><span class="ts">(0:52)</span><span class="speaker">訪談者：</span>就瀏覽一下這樣。</div>
+            <div class="transcript-line"><span class="ts">(1:19)</span><span class="speaker">訪談者：</span>好的，你看完了嗎？</div>
+            <div class="transcript-line"><span class="ts">(1:21)</span><span class="speaker">受訪者：</span>看完了。</div>
+            <div class="transcript-line"><span class="ts">(1:21)</span><span class="speaker">訪談者：</span>好，接下來呢，你再切換到臺灣世界遺產潛力點的那個網站，找一個你有興趣的地點，然後簡單規劃一個行程。</div>
+
+            <div class="transcript-note">（受訪者瀏覽網站中，以下一邊瀏覽網站有一些自言自語）</div>
+
+            <div class="transcript-line"><span class="ts">(2:10)</span><span class="speaker">訪談者：</span>好的，你就找一個你有興趣的。</div>
+            <div class="transcript-line"><span class="ts">(2:12)</span><span class="speaker">受訪者：</span>一個行程還是三天兩夜？</div>
+            <div class="transcript-line"><span class="ts">(2:14)</span><span class="speaker">訪談者：</span>規劃一個簡單的三天兩夜的行程，例如說可能第一天要去哪之類的就好了。</div>
+            <div class="transcript-line"><span class="ts">(2:28)</span><span class="speaker">受訪者：</span>那我是要臺灣的，哦，他應該是要世界遺產，好，我的錯，哦。</div>
+            <div class="transcript-line"><span class="ts">(2:40)</span><span class="speaker">受訪者：</span>看天燈……第一天。</div>
+            <div class="transcript-line"><span class="ts">(2:42)</span><span class="speaker">訪談者：</span>好。</div>
+            <div class="transcript-line"><span class="ts">(2:44)</span><span class="speaker">受訪者：</span>English good，International。</div>
+            <div class="transcript-line"><span class="ts">(2:54)</span><span class="speaker">受訪者：</span>好的。</div>
+            <div class="transcript-line"><span class="ts">(2:54)</span><span class="speaker">受訪者：</span>他沒有寫地點，這邊可以寫個地點。</div>
+            <div class="transcript-line"><span class="ts">(3:10)</span><span class="speaker">受訪者：</span>上元節跟阿美族……</div>
+            <div class="transcript-line"><span class="ts">(3:13)</span><span class="speaker">受訪者：</span>我要確定豐年祭跟上元節是在同一個時期……7月到9月。</div>
+            <div class="transcript-line"><span class="ts">(3:35)</span><span class="speaker">訪談者：</span>簡單講一下你要去哪就好了。</div>
+            <div class="transcript-line"><span class="ts">(3:38)</span><span class="speaker">受訪者：</span>好的。</div>
+            <div class="transcript-line"><span class="ts">(3:44)</span><span class="speaker">受訪者：</span>媽祖信仰是什麼時候？</div>
+            <div class="transcript-line"><span class="ts">(3:50)</span><span class="speaker">受訪者：</span>歐，7、8月。</div>
+            <div class="transcript-line"><span class="ts">(3:53)</span><span class="speaker">受訪者：</span>那先去看天燈，再去參與媽祖信仰的遶境，然後之後去山上，去阿美族的豐年祭。</div>
+            <div class="transcript-line"><span class="ts">(4:02)</span><span class="speaker">訪談者：</span>好的，那我們這邊操作的部分就結束了。</div>
+            <div class="transcript-line"><span class="ts">(4:07)</span><span class="speaker">訪談者：</span>那接下來我們就要問一些，你在體驗這個網站的時候的一些想法，首先就是當你今天要規劃文化旅遊，或是要找一些資料的時候，你一般都會先用搜尋引擎，就是Google之類的，還是你直接去點官方網站？</div>
+            <div class="transcript-line"><span class="ts">(4:26)</span><span class="speaker">受訪者：</span>Google，就是直接去搜尋，你要去的那個地點的話。</div>
+            <div class="transcript-line"><span class="ts">(4:32)</span><span class="speaker">訪談者：</span>為什麼會想要直接去用Google，而不是去點文化部的網站？</div>
+            <div class="transcript-line"><span class="ts">(4:40)</span><span class="speaker">受訪者：</span>比較直覺，文化部你還要自己找自己的東西，但Google可以把那個你想要的東西直接寫在你面前。</div>
+            <div class="transcript-line"><span class="ts">(4:47)</span><span class="speaker">訪談者：</span>好，沒問題。那接下來的話就是，像你在使用政府或文化相關的網站的時候，最常遇到的困擾是什麼，就像剛剛我們體驗的那樣子的話。</div>
+            <div class="transcript-line"><span class="ts">(5:10)</span><span class="speaker">受訪者：</span>如果是外國人，想要去找地點的話，會希望可能下面直接放幾個不管是預約網站，或者是Google地圖，你可以對這個有興趣，就可以直接進行相關的規劃，而不是只找那個Title而已。</div>
+            <div class="transcript-line"><span class="ts">(5:26)</span><span class="speaker">訪談者：</span>很好，那接下來，就是我們要來訪問一下你對剛剛那兩個網站的想法，第一個是當你開啟文化部的網站，就是藍色的那個，你對它整體的設計是有什麼感覺？是比較像新人旅遊網站，還是偏正式的政府網站呢？</div>
+            <div class="transcript-line"><span class="ts">(5:50)</span><span class="speaker">受訪者：</span>偏正式。</div>
+            <div class="transcript-line"><span class="ts">(5:51)</span><span class="speaker">訪談者：</span>那為什麼它的設計會讓你覺得它是正式的網站？</div>
+            <div class="transcript-line"><span class="ts">(5:57)</span><span class="speaker">受訪者：</span>設計上比較簡潔一點，如果是旅遊的話感覺會更活潑一點，覺得它就是，排版比較粗糙。</div>
+            <div class="transcript-line"><span class="ts">(6:16)</span><span class="speaker">訪談者：</span>然後再來就是你在看首頁的時候，你會覺得很容易找到有用的資訊嗎，例如說你想要找的景點或是重點內容嗎，你覺得有容易找到嗎？</div>
+            <div class="transcript-line"><span class="ts">(6:30)</span><span class="speaker">受訪者：</span>我覺得沒有，我覺得藏得有點深。找展覽的話，要從 whatsnew 這邊往下找，應該希望這邊直接放一個臺灣展覽。</div>
+            <div class="transcript-line"><span class="ts">(6:43)</span><span class="speaker">訪談者：</span>嗯，那所以有沒有哪個地方讓你覺得困惑？</div>
+            <div class="transcript-line"><span class="ts">(6:48)</span><span class="speaker">受訪者：</span>應該就是它的 title 比較難找，都藏在一大堆 nav bar 下面。</div>
+            <div class="transcript-line"><span class="ts">(6:55)</span><span class="speaker">訪談者：</span>那接下來，關於旅遊規劃體驗的部分。首先的話，你在瀏覽這些潛力景點，就是剛剛那個咖啡色的網站，是哪一些內容會讓你想要去那個地方？為什麼這些內容會吸引你？</div>
+            <div class="transcript-line"><span class="ts">(7:15)</span><span class="speaker">受訪者：</span>照片吧，就是上面有一些圖片吸引你，覺得這個東西看起來好像蠻漂亮的。</div>
+            <div class="transcript-line"><span class="ts">(7:22)</span><span class="speaker">訪談者：</span>okok，那當你試著把這些資訊變成一個行程的時候，你覺得這些資訊是夠用的嗎？有沒有缺少或是不清楚的地方？</div>
+            <div class="transcript-line"><span class="ts">(7:35)</span><span class="speaker">受訪者：</span>我覺得不夠用，就跟剛剛說的一樣，幾乎每個你想要把它排進行程都需要再做額外的搜尋，例如說哪一些東西、例如營業時間位置之類的，對，就像剛剛那個豐年祭，如果我是外國的使用者，就希望下面直接說幾月幾號、地點在哪、可以聯絡哪個廠商。</div>
+            <div class="transcript-line"><span class="ts">(8:05)</span><span class="speaker">受訪者：</span>還有像天燈也是，就希望能有更明確的地點。</div>
+            <div class="transcript-line"><span class="ts">(8:09)</span><span class="speaker">訪談者：</span>好，再來的話就是從剛剛，文化部的網站切換到世界文化遺產的網站的時候，有沒有哪一刻讓你覺得，很困惑或是卡住？例如說你剛剛是先在文化部瞭解一下文化，然後再去世界遺產去找說你要的行程。那在這兩者之間切換的時候，有沒有一些地方讓你覺得，好像沒什麼觀念之類的？</div>
+            <div class="transcript-line"><span class="ts">(8:47)</span><span class="speaker">受訪者：</span>我覺得文化部的也沒有到了解文化，可能有一點點？就是從展覽其實不太瞭解到文化的相關，文化相關反而是去世界遺產那邊的內部才去瞭解，可能上元節的詳細內容或豐年祭的詳細內容，這兩個其實沒什麼關聯。</div>
+            <div class="transcript-line"><span class="ts">(9:07)</span><span class="speaker">訪談者：</span>好那再來，就是你覺得文化部那個英文網站的內容好理解嗎？就是有沒有哪一個部分讓你覺得太官方或太難懂之類的？</div>
+            <div class="transcript-line"><span class="ts">(9:26)</span><span class="speaker">受訪者：</span>沒有。就是，就只有那些詞，所以都是好理解的，只是會有點難找到想要的東西。</div>
+            <div class="transcript-line"><span class="ts">(9:35)</span><span class="speaker">訪談者：</span>好然後接下來最後兩個問題，整體來說你最喜歡這些網站的地方是什麼？</div>
+            <div class="transcript-line"><span class="ts">(9:45)</span><span class="speaker">受訪者：</span>我覺得他們都有圖片，圖片讓人滿清楚的，知道在幹嘛。但同樣的如果對外國人來說，可能看圖片就沒辦法一眼知道在幹嘛。</div>
+            <div class="transcript-line"><span class="ts">(9:57)</span><span class="speaker">受訪者：</span>所以如果英文版或是外國版的海報會更好一點。</div>
+            <div class="transcript-line"><span class="ts">(10:03)</span><span class="speaker">訪談者：</span>ok，最不喜歡的點是什麼？</div>
+            <div class="transcript-line"><span class="ts">(10:07)</span><span class="speaker">受訪者：</span>最不喜歡的點就是這兩個網站你在搜尋的時候是想要以旅遊導向的話，可以做一些更多的功能，像這邊可能加時間或分類，點音樂就可以秀出音樂有哪些活動可以參加。</div>
+            <div class="transcript-line"><span class="ts">(10:30)</span><span class="speaker">受訪者：</span>就是他在時間上的標記，還有地點上的標記可能不太清楚，可以更貼心一點。</div>
+            <div class="transcript-line"><span class="ts">(10:39)</span><span class="speaker">訪談者：</span>好然後最後一個問題就是，如果只能改一個地方來讓你的體驗變好，你會想要改什麼？例如說他的介面設計，或者是你的流程之類的、或是內容的實用性。</div>
+            <div class="transcript-line"><span class="ts">(10:59)</span><span class="speaker">受訪者：</span>實用性吧。例如就希望兩個是整合在一起，或許可以加一些按鈕可以直接把一些東西加進行程收藏之類的。就是希望他可以整合一點這樣子。</div>
+            <div class="transcript-line"><span class="ts">(11:14)</span><span class="speaker">訪談者：</span>那現在時間還算夠，那我再問你最後一個問題，就是如果網站就像你剛剛說的，如果網站有一個 AI 助手可以幫助你整理重點、或推薦旅遊路線，你會覺得有幫助嗎？</div>
+            <div class="transcript-line"><span class="ts">(11:26)</span><span class="speaker">受訪者：</span>那一定要的，太有幫助了，我剛剛就覺得說如果旁邊能匯入——</div>
+            <div class="transcript-line"><span class="ts">(11:34)</span><span class="speaker">受訪者：</span>一個 AI 助手直接用問他的方式，我就不用透過 Google 和網站，不用自己去那邊按，沒錯，我覺得太有幫助了，真的。</div>
+            <div class="transcript-line"><span class="ts">(11:41)</span><span class="speaker">訪談者：</span>好的，那我們的訪問就到這邊，感謝你的參與，謝謝！</div>
+          </div>
+        </div>
+
+        <div class="transcript-card">
+          <div class="transcript-header">
+            <div class="transcript-title">Transcript 2</div>
+            <div class="transcript-meta">Pending</div>
+          </div>
+          <div class="placeholder-box">
+            Transcript 2 will be added here.
+          </div>
+        </div>
+
+        <div class="transcript-card">
+          <div class="transcript-header">
+            <div class="transcript-title">Transcript 3</div>
+            <div class="transcript-meta">Pending</div>
+          </div>
+          <div class="placeholder-box">
+            Transcript 3 will be added here.
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top:2rem;">
+        <span class="section-title">CI Report</span>
+        <span class="section-count">2 sections</span>
+      </div>
+
+      <div class="transcript-list">
+        <div class="transcript-card">
+          <div class="transcript-header">
+            <div class="transcript-title">Summary</div>
+            <div class="transcript-meta">To be added</div>
+          </div>
+          <div class="placeholder-box">
+            CI report summary will be added here.
+          </div>
+        </div>
+
+        <div class="transcript-card">
+          <div class="transcript-header">
+            <div class="transcript-title">Insights</div>
+            <div class="transcript-meta">To be added</div>
+          </div>
+          <div class="placeholder-box">
+            CI report insights will be added here.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showHW(id) {
+      document.getElementById('home-view').style.display = 'none';
+      document.querySelectorAll('[id^="hw"]').forEach(el => el.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    function showHome() {
+      document.querySelectorAll('[id^="hw"]').forEach(el => el.style.display = 'none');
+      document.getElementById('home-view').style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+  </script>
+</body>
+</html>
