@@ -175,8 +175,8 @@
   <div class="section">
     <div class="section-header">
       <span class="section-title">Assignments</span>
-      <!-- <span class="section-count">2 items</span> -->
-      <span class="section-count">3 items</span>
+      <!-- <span class="section-count">3 items</span> -->
+       <span class="section-count">4 items</span>
     </div>
     
     <div class="grid">
@@ -209,7 +209,16 @@
     <div class="card-thumb thumb-orange">🧩</div>
     <!-- <div class="card-title">HW #2.1 Affinity Diagram</div> -->
      <div class="card-title">Group3_HW2.1 — Affinity Diagram</div>
-    <div class="card-desc">Organizing interview findings into themes and clusters to identify major user needs and design opportunities.</div>
+    <div class="card-desc">Organizing interview findings into themes and clusters to identify major user needs and design opportunities.</div>  
+  </div>
+      <div class="card" onclick="showView('hw3')">
+    <div class="card-top">
+      <span class="card-week">HW 3</span>
+      <span class="card-status status-wip">In Progress</span>
+    </div>
+    <div class="card-thumb thumb-purple">🧑‍🤝‍🧑</div>
+    <div class="card-title">Group3_HW3 — Persona Creation</div>
+    <div class="card-desc">Creating user personas based on contextual inquiry findings to represent key user archetypes and needs.</div>
   </div>
 </div>
   </div>
@@ -422,6 +431,34 @@
   </div>
 </div>
 
+<!-- HW 3 -->
+<div id="v-hw3" style="display:none;">
+  <div class="section" style="margin-top:2.5rem;">
+    <div class="hw-header">
+      <div class="hw-title-row">
+        <button class="back-btn" onclick="showView('home')">← Back</button>
+        <span class="card-status status-wip">In Progress</span>
+      </div>
+      <div class="hw-title">Group3 HW #3 — Persona Creation</div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:6px;">User personas derived from contextual inquiry findings to represent key user archetypes and their goals.</p>
+    </div>
+
+    <div class="section-header">
+      <span class="section-title">Personas</span>
+      <span class="section-count">2 personas</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div class="pdf-wrap">
+        <img src="persona1.png" alt="Persona 1" style="width:100%;border-radius:var(--radius-md);display:block;" />
+      </div>
+      <div class="pdf-wrap">
+        <img src="persona2.png" alt="Persona 2" style="width:100%;border-radius:var(--radius-md);display:block;" />
+      </div>
+    </div>
+  </div>
+</div>
+  
 <script>
   const transcripts = {
     1: {
