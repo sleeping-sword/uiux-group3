@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>農業文化體驗 App 原型</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g1:#1e4d1a;--g2:#2d5a27;--g3:#4a8c3f;--g4:#78b44a;
+  --earth:#7a5c10;--cream:#f5f0e8;--warm:#fdfbf7;
+  --text:#1a1a1a;--t2:#555;--t3:#999;--bd:#e8e3da;
+}
+body{background:#0f1923;min-height:100vh;display:flex;align-items:center;justify-content:center;gap:32px;padding:32px 20px;font-family:-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}
+
+/* ── PHONE ── */
+.phone{width:393px;background:#1a1a1a;border-radius:54px;padding:14px;position:relative;flex-shrink:0;
+  box-shadow:0 0 0 1px #3a3a3a,0 0 0 2px #222,0 40px 100px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.05)}
+.phone::before{content:'';position:absolute;left:-3px;top:120px;width:3px;height:35px;background:#3a3a3a;border-radius:2px 0 0 2px;box-shadow:0 50px 0 #3a3a3a,0 90px 0 #3a3a3a}
+.phone::after{content:'';position:absolute;right:-3px;top:150px;width:3px;height:75px;background:#3a3a3a;border-radius:0 2px 2px 0}
+.screen-area{width:365px;height:790px;border-radius:42px;overflow:hidden;background:var(--warm);position:relative}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:1000;pointer-events:none}
+.sbar{position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 8px;font-size:12px;font-weight:600;color:var(--text);z-index:999;pointer-events:none}
+.sbar.w{color:#fff}
+
+/* ── SCREENS ── */
+.screen{position:absolute;inset:0;background:var(--warm);overflow-y:auto;overflow-x:hidden;scrollbar-width:none;transform:translateX(100%);will-change:transform}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{transform:translateX(0)}
+
+/* ── BOTTOM TABS ── */
+.tabs{position:sticky;bottom:0;background:rgba(253,251,247,.92);backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;padding:8px 0 20px;z-index:100}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;-webkit-tap-highlight-color:transparent}
+.tab .ti{font-size:22px}.tab .tl{font-size:10px;font-weight:500;color:var(--t3)}
+.tab.on .tl{color:var(--g3)}
+.tab-scan{flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-top:-22px}
+.tab-scan-btn{width:54px;height:54px;background:linear-gradient(135deg,var(--g2),var(--g3));border-radius:50%;display:grid;place-items:center;box-shadow:0 4px 16px rgba(45,90,39,.4);border:3px solid var(--warm)}
+.tab-scan-lbl{font-size:10px;font-weight:600;color:var(--g3);margin-top:4px}
+
+/* ── REUSABLE ── */
+.hdr{padding:60px 20px 16px;display:flex;align-items:center;gap:12px}
+.back{width:36px;height:36px;background:var(--cream);border-radius:50%;display:grid;place-items:center;font-size:15px;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.htitle{font-size:18px;font-weight:700;flex:1}
+.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:99px;font-size:13px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.cf{background:var(--g3);color:#fff;border:none}
+.co{border:1.5px solid var(--bd);color:var(--t2);background:#fff}
+.ce{background:rgba(122,92,16,.1);color:var(--earth);border:none}
+.btn{width:100%;padding:16px;border-radius:14px;border:none;font-size:16px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:inherit}
+.btn:active{transform:scale(.98)}
+.bg{background:var(--g3);color:#fff}
+.bo{background:#fff;color:var(--g2);border:2px solid var(--g3)}
+.hscroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.hscroll::-webkit-scrollbar{display:none}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 20px;margin-bottom:12px}
+.sec-t{font-size:16px;font-weight:700}
+.sec-m{font-size:13px;color:var(--g3);font-weight:500;cursor:pointer}
+
+/* ══════════════════ */
+/*  1. SPLASH         */
+/* ══════════════════ */
+#s1{background:linear-gradient(160deg,#1e4d1a,#2d6a27 50%,#4a8c3f);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:40px 32px}
+
+/* ══════════════════ */
+/*  2. HOME           */
+/* ══════════════════ */
+#s2{background:var(--warm)}
+.hm-hdr{padding:60px 20px 12px;display:flex;align-items:center;justify-content:space-between}
+.hm-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g4));display:grid;place-items:center;font-size:18px;cursor:pointer}
+.srch{margin:0 20px 16px;background:var(--cream);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:8px;color:var(--t3);font-size:14px}
+.banner{margin:0 20px 20px;background:linear-gradient(135deg,var(--g2),var(--g3));border-radius:16px;padding:16px 18px;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.c-card{flex-shrink:0;width:160px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.c-card:active{transform:scale(.97)}
+.c-img{height:110px;display:flex;align-items:center;justify-content:center;font-size:44px}
+.c-body{padding:10px 12px 12px}
+.c-name{font-size:14px;font-weight:700;margin-bottom:3px}
+.c-meta{font-size:11px;color:var(--t3)}
+.act-list{padding:0 20px}
+.act{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.act:last-child{border-bottom:none}
+.act-ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.act-n{font-size:14px;font-weight:600;margin-bottom:2px}
+.act-m{font-size:12px;color:var(--t3)}
+.badge{font-size:11px;padding:3px 8px;border-radius:99px;font-weight:600}
+
+/* ══════════════════ */
+/*  3. DETAIL         */
+/* ══════════════════ */
+#s3{background:var(--warm)}
+.d-hero{width:100%;height:240px;display:flex;align-items:center;justify-content:center;font-size:72px;position:relative}
+.d-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.5))}
+.d-bk{position:absolute;top:56px;left:16px;width:36px;height:36px;background:rgba(0,0,0,.35);border-radius:50%;display:grid;place-items:center;font-size:15px;color:#fff;cursor:pointer;z-index:10;-webkit-tap-highlight-color:transparent}
+.d-title{position:absolute;bottom:16px;left:20px;color:#fff;font-size:22px;font-weight:800;z-index:10;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+.d-body{padding:20px}
+.d-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.ai-box{background:rgba(74,140,63,.08);border-left:3px solid var(--g3);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:20px}
+.ai-lbl{font-size:11px;font-weight:700;color:var(--g3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.ai-txt{font-size:14px;line-height:1.7;color:var(--t2)}
+.exp-card{flex-shrink:0;width:110px;background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.d-cta{position:sticky;bottom:0;background:rgba(253,251,247,.95);backdrop-filter:blur(16px);padding:12px 20px 28px;border-top:1px solid var(--bd)}
+
+/* ══════════════════ */
+/*  4. AI CHAT        */
+/* ══════════════════ */
+#s4{background:var(--warm);display:flex;flex-direction:column;overflow:hidden}
+.ch-hdr{padding:56px 20px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--bd);background:var(--warm);flex-shrink:0}
+.ch-av{width:40px;height:40px;background:linear-gradient(135deg,var(--g2),var(--g3));border-radius:50%;display:grid;place-items:center;font-size:18px}
+.ch-msgs{flex:1;padding:16px;overflow-y:auto;scrollbar-width:none}
+.ch-msgs::-webkit-scrollbar{display:none}
+.msg{display:flex;gap:8px;margin-bottom:12px;align-items:flex-end}
+.msg.u{flex-direction:row-reverse}
+.m-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;font-size:12px}
+.m-av.a{background:var(--g3);color:#fff}
+.m-av.u{background:var(--earth);color:#fff}
+.bub{max-width:72%;padding:10px 13px;border-radius:18px;font-size:14px;line-height:1.55}
+.bub.a{background:#fff;color:var(--text);border-bottom-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.bub.u{background:var(--g3);color:#fff;border-bottom-right-radius:4px}
+.qr-btns{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;scrollbar-width:none;flex-shrink:0;border-top:1px solid var(--bd)}
+.qr-btns::-webkit-scrollbar{display:none}
+.qb{flex-shrink:0;padding:8px 14px;background:#fff;border:1.5px solid var(--bd);border-radius:99px;font-size:13px;cursor:pointer;color:var(--g2);font-weight:500;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.ch-in{padding:8px 16px 24px;background:var(--warm);display:flex;gap:8px;align-items:center;flex-shrink:0}
+.ch-fld{flex:1;background:var(--cream);border:none;border-radius:22px;padding:10px 16px;font-size:14px;outline:none;font-family:inherit}
+.ch-send{width:38px;height:38px;background:var(--g3);border-radius:50%;border:none;display:grid;place-items:center;font-size:15px;cursor:pointer;color:#fff;-webkit-tap-highlight-color:transparent}
+
+/* ══════════════════ */
+/*  5. ITIN SETUP     */
+/* ══════════════════ */
+#s5{background:var(--warm)}
+.it-sec{padding:0 20px;margin-bottom:22px}
+.it-t{font-size:15px;font-weight:700;margin-bottom:12px}
+.m-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mb{padding:10px 4px;border-radius:10px;text-align:center;cursor:pointer;border:1.5px solid var(--bd);background:#fff;font-size:12px;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.mb .mn{font-weight:700;margin-bottom:2px}
+.mb .mh{font-size:9px;color:var(--t3)}
+.mb.sel{background:var(--g3);border-color:var(--g3);color:#fff}
+.mb.sel .mh{color:rgba(255,255,255,.75)}
+.i-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ib{padding:16px 12px;border-radius:14px;border:2px solid var(--bd);background:#fff;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.ib .ii{font-size:28px;margin-bottom:6px}
+.ib .in{font-size:13px;font-weight:600}
+.ib .ih{font-size:11px;color:var(--t3);margin-top:2px}
+.ib.sel{border-color:var(--g3);background:rgba(74,140,63,.06)}
+.ib.sel .in{color:var(--g2)}
+.d-row{display:flex;gap:8px}
+.dopt{flex:1;padding:12px 8px;border-radius:12px;border:1.5px solid var(--bd);background:#fff;text-align:center;cursor:pointer;font-size:13px;font-weight:600;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.dopt.sel{background:var(--g3);border-color:var(--g3);color:#fff}
+.gen-bar{padding:12px 20px 32px;position:sticky;bottom:0;background:rgba(253,251,247,.95);backdrop-filter:blur(12px);border-top:1px solid var(--bd)}
+
+/* ══════════════════ */
+/*  6. ITIN RESULT    */
+/* ══════════════════ */
+#s6{background:var(--warm)}
+.ir-hdr{background:linear-gradient(135deg,var(--g2),var(--g3));padding:56px 20px 24px;color:#fff}
+.map-box{margin:20px;height:160px;border-radius:16px;position:relative;overflow:hidden;background:linear-gradient(135deg,#c8e6c9,#a5d6a7,#81c784);box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.mp{position:absolute;width:12px;height:12px;background:var(--g2);border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.ml{position:absolute;background:#fff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;color:var(--g2);box-shadow:0 1px 4px rgba(0,0,0,.15);white-space:nowrap}
+.tl-wrap{padding:0 20px 16px}
+.d-hdr2{display:flex;align-items:center;gap:8px;margin:20px 0 12px}
+.d-num{width:32px;height:32px;background:var(--g3);border-radius:50%;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:800}
+.tl-item{display:flex;gap:12px;padding-left:16px;position:relative;margin-bottom:12px}
+.tl-item::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;background:var(--g3);border-radius:50%}
+.tl-item::after{content:'';position:absolute;left:2.5px;top:17px;width:1px;bottom:-4px;background:var(--bd)}
+.tl-item:last-child::after{display:none}
+.tl-t{font-size:11px;color:var(--earth);font-weight:600;min-width:40px;margin-top:1px}
+.tl-n{font-size:14px;font-weight:600;margin-bottom:2px}
+.tl-s{font-size:12px;color:var(--t3)}
+.save-bar{position:sticky;bottom:0;padding:12px 20px 28px;background:rgba(253,251,247,.95);backdrop-filter:blur(16px);border-top:1px solid var(--bd);display:flex;gap:10px}
+
+/* ══════════════════ */
+/*  7. QR SCAN        */
+/* ══════════════════ */
+#s7{background:#111;color:#fff;position:relative}
+.qr-bk{position:absolute;top:56px;left:16px;width:36px;height:36px;background:rgba(255,255,255,.15);border-radius:50%;display:grid;place-items:center;font-size:15px;cursor:pointer;z-index:200;-webkit-tap-highlight-color:transparent}
+.vf{width:100%;height:460px;background:linear-gradient(180deg,#111,#1a2f1a);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative}
+.corners{width:200px;height:200px;position:relative}
+.cn{position:absolute;width:30px;height:30px;border-color:var(--g4);border-style:solid}
+.cn.tl{top:0;left:0;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
+.cn.tr{top:0;right:0;border-width:3px 3px 0 0;border-radius:0 4px 0 0}
+.cn.bl{bottom:0;left:0;border-width:0 0 3px 3px;border-radius:0 0 0 4px}
+.cn.br{bottom:0;right:0;border-width:0 3px 3px 0;border-radius:0 0 4px 0}
+.scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g4),transparent);animation:scan 2s ease-in-out infinite}
+@keyframes scan{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:200px;opacity:0}}
+.vf-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center;color:rgba(255,255,255,.7);font-size:13px;white-space:nowrap}
+.sheet{position:absolute;bottom:0;left:0;right:0;background:var(--warm);border-radius:24px 24px 0 0;padding:12px 20px 32px;transform:translateY(100%);transition:transform .4s cubic-bezier(0.4,0,.2,1);z-index:100;color:var(--text)}
+.sheet.show{transform:translateY(0)}
+.sh-handle{width:36px;height:4px;background:var(--bd);border-radius:99px;margin:0 auto 16px}
+
+/* ── LEGEND PANEL ── */
+.legend{background:rgba(255,255,255,.07);border-radius:16px;padding:20px;color:rgba(255,255,255,.85);width:200px;align-self:center}
+.legend h3{font-size:12px;font-weight:700;margin-bottom:12px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em}
+.leg-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.leg-row:last-child{border-bottom:none}
+.leg-row:hover{opacity:.7}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;transition:background .2s}
+.dot.on{background:var(--g4)}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+/* ── GEN RESULT SHEET ── */
+.gen-sheet{position:absolute;bottom:0;left:0;right:0;background:var(--warm);border-radius:24px 24px 0 0;padding:12px 20px 32px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);z-index:200;max-height:85%;overflow-y:auto;scrollbar-width:none}
+.gen-sheet::-webkit-scrollbar{display:none}
+.gen-sheet.show{transform:translateY(0)}
+.gen-block{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.gen-label{font-size:11px;font-weight:700;color:var(--g3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.gen-text{font-size:14px;line-height:1.7;color:var(--t2)}
+/* Checkbox accent */
+input[type=checkbox]{accent-color:var(--g3)}
+
+/* ══════════════════════════════════ */
+/*  LOGIN / REGISTER / PREF SURVEY   */
+/* ══════════════════════════════════ */
+.inp-wrap{margin-bottom:14px}
+.inp-lbl{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:6px}
+.inp{width:100%;background:var(--cream);border:1.5px solid var(--bd);border-radius:12px;padding:12px 14px;font-size:15px;outline:none;font-family:inherit;color:var(--text);transition:border-color .15s;-webkit-appearance:none;appearance:none}
+.inp:focus{border-color:var(--g3);background:#fff}
+.or-line{display:flex;align-items:center;gap:10px;margin:16px 0;font-size:12px;color:var(--t3)}
+.or-line::before,.or-line::after{content:'';flex:1;height:1px;background:var(--bd)}
+.role-row{display:flex;gap:12px}
+.role-card{flex:1;background:#fff;border-radius:16px;padding:20px 12px;text-align:center;border:2px solid var(--bd);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.role-card.sel{border-color:var(--g3);background:rgba(74,140,63,.07)}
+.role-card.sel-f{border-color:var(--earth);background:rgba(122,92,16,.07)}
+.role-card .ri{font-size:32px;margin-bottom:8px}
+.role-card .rn{font-size:14px;font-weight:700;margin-bottom:4px}
+.role-card .rs{font-size:11px;color:var(--t3);line-height:1.5}
+.pref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.pref-card{background:#fff;border-radius:14px;padding:14px 8px;text-align:center;border:2px solid var(--bd);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.pref-card .pi{font-size:28px;margin-bottom:6px}
+.pref-card .pn{font-size:12px;font-weight:600;color:var(--t2);line-height:1.4}
+.pref-card.sel{border-color:var(--g3);background:rgba(74,140,63,.07)}
+.pref-card.sel .pn{color:var(--g2)}
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.style-card{background:#fff;border-radius:14px;padding:14px;border:2px solid var(--bd);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:10px}
+.style-card.sel{border-color:var(--g3);background:rgba(74,140,63,.07)}
+.style-card .si{font-size:22px;flex-shrink:0}
+.style-card .sn{font-size:13px;font-weight:600;color:var(--t2);line-height:1.35}
+.style-card.sel .sn{color:var(--g2)}
+.prog-bar{height:4px;background:var(--bd);border-radius:99px}
+.prog-fill{height:100%;background:var(--g3);border-radius:99px;transition:width .4s ease}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="screen-area">
+    <div class="island"></div>
+
+    <!-- Status bar -->
+    <div class="sbar" id="sbar"><span>9:41</span><span>▲▲▲ 🔋</span></div>
+
+    <!-- ═══ S1 SPLASH ═══ -->
+    <div class="screen active" id="s1">
+      <div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#1e4d1a,#2d6a27 50%,#4a8c3f);text-align:center;color:#fff;padding:40px 32px">
+        <div style="font-size:80px;margin-bottom:24px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.3))">🌾</div>
+        <div style="font-size:26px;font-weight:800;line-height:1.3;margin-bottom:12px">台灣農業<br>文化體驗</div>
+        <div style="font-size:14px;opacity:.75;line-height:1.7;margin-bottom:48px;max-width:200px">用 AI 帶你理解、規劃，並親身踏入農業文化</div>
+        <button class="btn" style="background:#fff;color:#2d6a27;padding:16px 48px;border-radius:99px;width:auto;box-shadow:0 8px 24px rgba(0,0,0,.25)" onclick="go('sL')">開始探索</button>
+        <div style="display:flex;gap:8px;margin-top:40px">
+          <div style="width:24px;height:8px;border-radius:99px;background:#fff"></div>
+          <div style="width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.4)"></div>
+          <div style="width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.4)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ S2 HOME ═══ -->
+    <div class="screen" id="s2">
+      <div class="hm-hdr">
+        <div><div style="font-size:13px;color:#999;margin-bottom:2px">早安 👋</div><div style="font-size:22px;font-weight:800">探索<span style="color:var(--g3)">農業文化</span></div></div>
+        <div class="hm-av" onclick="go('s8')">👤</div>
+      </div>
+      <div class="srch"><span>🔍</span><span>搜尋農業文化、地點、季節…</span></div>
+      <!-- Season banner -->
+      <div class="banner" onclick="go('s3')">
+        <div style="font-size:11px;font-weight:600;opacity:.7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">🍂 現在是秋茶季</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:4px">高山烏龍 正在採收</div>
+        <div style="font-size:12px;opacity:.75">南投・阿里山・坪林 限時體驗 →</div>
+      </div>
+      <!-- Category chips -->
+      <div class="sec-hdr"><div class="sec-t">分類探索</div></div>
+      <div class="hscroll" style="padding:0 20px;margin-bottom:20px">
+        <span class="chip cf">🍵 全部</span>
+        <span class="chip co">🌾 稻米文化</span>
+        <span class="chip co">🌺 原住民祭典</span>
+        <span class="chip co">🍍 熱帶果物</span>
+        <span class="chip co">🎋 傳統工藝</span>
+      </div>
+      <!-- Cards -->
+      <div class="sec-hdr"><div class="sec-t">本季推薦</div><div class="sec-m">全部</div></div>
+      <div class="hscroll" style="padding:0 20px;margin-bottom:24px">
+        <div class="c-card" onclick="go('s3')">
+          <div class="c-img" style="background:linear-gradient(135deg,#c8e6c9,#a5d6a7)">🍵</div>
+          <div class="c-body"><div class="c-name">高山茶文化</div><div class="c-meta">南投 · 秋茶季 🍂</div></div>
+        </div>
+        <div class="c-card" onclick="go('s3')">
+          <div class="c-img" style="background:linear-gradient(135deg,#fff9c4,#fff176)">🌾</div>
+          <div class="c-body"><div class="c-name">池上稻米文化</div><div class="c-meta">台東 · 二期收割</div></div>
+        </div>
+        <div class="c-card" onclick="go('s3')">
+          <div class="c-img" style="background:linear-gradient(135deg,#ffe0b2,#ffcc80)">🌺</div>
+          <div class="c-body"><div class="c-name">阿美族豐年祭</div><div class="c-meta">花蓮 · 7–8月</div></div>
+        </div>
+        <div class="c-card" onclick="go('s3')">
+          <div class="c-img" style="background:linear-gradient(135deg,#f8bbd0,#f48fb1)">🍊</div>
+          <div class="c-body"><div class="c-name">柿子文化</div><div class="c-meta">苗栗 · 10–11月</div></div>
+        </div>
+      </div>
+      <!-- Activity list -->
+      <div class="sec-hdr"><div class="sec-t">近期農業活動</div><div class="sec-m">更多</div></div>
+      <div class="act-list">
+        <div class="act" onclick="go('s3')">
+          <div class="act-ic" style="background:rgba(74,140,63,.1)">🍵</div>
+          <div style="flex:1"><div class="act-n">凍頂烏龍秋茶體驗</div><div class="act-m">南投鹿谷 · 10/1–11/15</div></div>
+          <div class="badge" style="background:rgba(74,140,63,.1);color:#2d5a27">進行中</div>
+        </div>
+        <div class="act" onclick="go('s3')">
+          <div class="act-ic" style="background:rgba(255,193,7,.1)">🌾</div>
+          <div style="flex:1"><div class="act-n">池上稻穗收割節</div><div class="act-m">台東池上 · 10/15–10/31</div></div>
+          <div class="badge" style="background:rgba(255,152,0,.1);color:#e65100">即將開始</div>
+        </div>
+        <div class="act" onclick="go('s5')">
+          <div class="act-ic" style="background:rgba(233,30,99,.08)">🍎</div>
+          <div style="flex:1"><div class="act-n">梨山蘋果採摘季</div><div class="act-m">台中梨山 · 9/1–11/30</div></div>
+          <div class="badge" style="background:rgba(74,140,63,.1);color:#2d5a27">進行中</div>
+        </div>
+      </div>
+      <div class="tabs">
+        <div class="tab on" onclick="go('s2')"><span class="ti">🏠</span><span class="tl" style="color:var(--g3)">首頁</span></div>
+        <div class="tab" onclick="go('s3')"><span class="ti">🧭</span><span class="tl">探索</span></div>
+        <div class="tab-scan" onclick="go('s7')">
+          <div class="tab-scan-btn">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="white" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1" y="1" width="9" height="9" rx="1.5" fill="none" stroke="white" stroke-width="2"/>
+              <rect x="4" y="4" width="3" height="3"/>
+              <rect x="16" y="1" width="9" height="9" rx="1.5" fill="none" stroke="white" stroke-width="2"/>
+              <rect x="19" y="4" width="3" height="3"/>
+              <rect x="1" y="16" width="9" height="9" rx="1.5" fill="none" stroke="white" stroke-width="2"/>
+              <rect x="4" y="19" width="3" height="3"/>
+              <rect x="16" y="16" width="3" height="3"/><rect x="20" y="16" width="3" height="3"/>
+              <rect x="16" y="20" width="3" height="3"/><rect x="20" y="20" width="3" height="3"/>
+            </svg>
+          </div>
+          <span class="tab-scan-lbl">掃描</span>
+        </div>
+        <div class="tab" onclick="go('s5')"><span class="ti">📅</span><span class="tl">行程</span></div>
+        <div class="tab" onclick="go('s4')"><span class="ti">💬</span><span class="tl">AI</span></div>
+      </div>
+    </div>
+
+    <!-- ═══ S3 DETAIL ═══ -->
+    <div class="screen" id="s3">
+      <div class="d-hero" style="background:linear-gradient(160deg,#1e4d1a,#4a8c3f)">
+        <div class="d-ov"></div>
+        <div style="font-size:80px;z-index:5">🍵</div>
+        <div class="d-bk" onclick="back()">←</div>
+        <div style="position:absolute;top:56px;right:16px;width:36px;height:36px;background:rgba(0,0,0,.35);border-radius:50%;display:grid;place-items:center;font-size:15px;color:#fff;z-index:10">↗</div>
+        <div class="d-title">高山茶文化</div>
+      </div>
+      <div class="d-body">
+        <div class="d-chips"><span class="chip ce">🍂 秋茶季</span><span class="chip ce">📍 南投・阿里山</span><span class="chip ce">⛰️ 海拔 1000m+</span></div>
+        <div class="ai-box">
+          <div class="ai-lbl">🤖 AI 文化摘要</div>
+          <div class="ai-txt">台灣高山茶文化發展於清末，在海拔 1000m 以上的山區種植。每年秋茶季（9–11月），晝夜溫差讓茶葉積累出獨特甘甜與茶香。採茶是純手工作業，一名熟練茶農一天僅能採約 3 公斤，是兼具農業智慧與文化意義的傳統。</div>
+        </div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:12px">可參與體驗</div>
+        <div class="hscroll" style="margin-bottom:20px">
+          <div class="exp-card"><div style="font-size:28px;margin-bottom:6px">🫱</div><div style="font-size:12px;font-weight:600">親手採茶</div></div>
+          <div class="exp-card"><div style="font-size:28px;margin-bottom:6px">♨️</div><div style="font-size:12px;font-weight:600">製茶體驗</div></div>
+          <div class="exp-card"><div style="font-size:28px;margin-bottom:6px">🍵</div><div style="font-size:12px;font-weight:600">茶道學習</div></div>
+          <div class="exp-card"><div style="font-size:28px;margin-bottom:6px">🌿</div><div style="font-size:12px;font-weight:600">茶園導覽</div></div>
+        </div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:12px">最佳造訪時間</div>
+        <div class="card" style="padding:14px 16px;margin-bottom:20px">
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+            <div style="display:flex;justify-content:space-between"><span style="color:#999">春茶</span><span style="font-weight:600">3–5月 🌸</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#999">夏茶</span><span style="font-weight:600">6–8月 ☀️</span></div>
+            <div style="display:flex;justify-content:space-between;background:rgba(74,140,63,.08);padding:6px 8px;border-radius:8px"><span style="color:#2d5a27;font-weight:700">秋茶 ✦ 現在</span><span style="font-weight:700;color:#2d5a27">9–11月 🍂</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#999">冬茶</span><span style="font-weight:600">11–12月 ❄️</span></div>
+          </div>
+        </div>
+        <div style="height:100px"></div>
+      </div>
+      <div class="d-cta"><button class="btn bg" onclick="go('s5')">📅 生成茶文化體驗行程</button></div>
+    </div>
+
+    <!-- ═══ S4 AI CHAT ═══ -->
+    <div class="screen" id="s4" style="overflow:hidden">
+      <div style="height:100%;display:flex;flex-direction:column">
+        <div class="ch-hdr">
+          <div class="back" onclick="back()">←</div>
+          <div class="ch-av">🌿</div>
+          <div style="flex:1">
+            <div style="font-size:16px;font-weight:700">農業文化 AI</div>
+            <div style="font-size:11px;color:var(--g3);display:flex;align-items:center;gap:4px"><div style="width:6px;height:6px;border-radius:50%;background:var(--g4)"></div>線上中</div>
+          </div>
+        </div>
+        <div class="ch-msgs" id="msgs">
+          <div style="font-size:10px;color:var(--t3);text-align:center;margin:4px 0 12px">今天 9:41</div>
+          <div class="msg"><div class="m-av a">🌿</div><div class="bub a">你好！我是台灣農業文化 AI。問我任何關於台灣農業文化的事吧 🌾</div></div>
+          <div class="msg u"><div class="m-av u">👤</div><div class="bub u">我想了解台灣的茶文化</div></div>
+          <div class="msg"><div class="m-av a">🌿</div><div class="bub a">台灣高山茶文化超過 200 年歷史！最特別的是「高山烏龍」——在海拔 1000m 以上，晝夜溫差讓茶葉發展出獨特甘甜 🍵<br><br>每年有四個採收季，秋茶（9–11月）和冬茶最珍貴。</div></div>
+          <div class="msg u"><div class="m-av u">👤</div><div class="bub u">10月去的話適合去哪裡？</div></div>
+          <div class="msg"><div class="m-av a">🌿</div><div class="bub a">10月是秋茶季的黃金期 🍂！<br><br>推薦：<br>• <b>南投鹿谷</b>：凍頂烏龍發源地<br>• <b>阿里山達邦</b>：鄒族傳統茶園<br>• <b>坪林</b>：文山包種茶<br><br>要幫你生成一個 2 天行程嗎？</div></div>
+        </div>
+        <div class="qr-btns">
+          <div class="qb" onclick="qreply('好的，幫我生成行程')">📅 生成行程</div>
+          <div class="qb" onclick="qreply('稻米文化是什麼')">🌾 稻米文化</div>
+          <div class="qb" onclick="qreply('豐年祭什麼時候')">🌺 豐年祭</div>
+          <div class="qb" onclick="qreply('適合外國人嗎')">🌍 外國人適合</div>
+        </div>
+        <div class="ch-in">
+          <input class="ch-fld" id="cinput" type="text" placeholder="輸入問題…">
+          <button class="ch-send" onclick="sendMsg()">↑</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ S5 ITIN SETUP ═══ -->
+    <div class="screen" id="s5">
+      <div class="hdr"><div class="back" onclick="back()">←</div><div class="htitle">規劃農業文化行程</div></div>
+      <div class="it-sec">
+        <div class="it-t">你想幾月去台灣？</div>
+        <div class="m-grid">
+          <div class="mb" onclick="selM(this)"><div class="mn">1月</div><div class="mh">柑橘</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">2月</div><div class="mh">油菜花</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">3月</div><div class="mh">春茶🌸</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">4月</div><div class="mh">梅子</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">5月</div><div class="mh">鳳梨</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">6月</div><div class="mh">芒果🥭</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">7月</div><div class="mh">豐年祭</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">8月</div><div class="mh">豐年祭🌺</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">9月</div><div class="mh">秋茶</div></div>
+          <div class="mb sel" onclick="selM(this)"><div class="mn">10月</div><div class="mh">秋茶🍂</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">11月</div><div class="mh">柿子</div></div>
+          <div class="mb" onclick="selM(this)"><div class="mn">12月</div><div class="mh">草莓</div></div>
+        </div>
+      </div>
+      <div class="it-sec">
+        <div class="it-t">你最感興趣的是？</div>
+        <div class="i-grid">
+          <div class="ib sel" onclick="selI(this)"><div class="ii">🍵</div><div class="in">茶文化</div><div class="ih">採茶・製茶・茶道</div></div>
+          <div class="ib" onclick="selI(this)"><div class="ii">🌾</div><div class="in">稻米文化</div><div class="ih">插秧・農村生活</div></div>
+          <div class="ib" onclick="selI(this)"><div class="ii">🌺</div><div class="in">原住民祭典</div><div class="ih">豐年祭・小米</div></div>
+          <div class="ib" onclick="selI(this)"><div class="ii">🍍</div><div class="in">熱帶果物</div><div class="ih">採果・農場體驗</div></div>
+        </div>
+      </div>
+      <div class="it-sec">
+        <div class="it-t">幾天的行程？</div>
+        <div class="d-row">
+          <div class="dopt" onclick="selD(this)">1天</div>
+          <div class="dopt sel" onclick="selD(this)">2天1夜</div>
+          <div class="dopt" onclick="selD(this)">3天2夜</div>
+        </div>
+      </div>
+      <div style="height:80px"></div>
+      <div class="gen-bar"><button class="btn bg" onclick="go('s6')">🤖 AI 生成我的行程</button></div>
+    </div>
+
+    <!-- ═══ S6 ITIN RESULT ═══ -->
+    <div class="screen" id="s6">
+      <div class="ir-hdr">
+        <div class="back" onclick="back()" style="background:rgba(255,255,255,.2);color:#fff;width:32px;height:32px;font-size:14px">←</div>
+        <div style="margin-top:12px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.7;margin-bottom:6px">🤖 AI 生成行程</div>
+          <div style="font-size:22px;font-weight:800;margin-bottom:8px">秋茶季 · 2天1夜</div>
+          <div style="font-size:13px;opacity:.8;display:flex;gap:12px"><span>📅 10月</span><span>📍 台北出發</span><span>🍵 茶文化</span></div>
+        </div>
+      </div>
+      <!-- Map -->
+      <div class="map-box">
+        <div style="position:absolute;inset:0;background:linear-gradient(135deg,#c8e6c9,#a5d6a7,#81c784);opacity:.7"></div>
+        <div class="mp" style="top:28%;left:14%"></div><div class="ml" style="top:20%;left:17%">台北</div>
+        <div class="mp" style="top:54%;left:38%"></div><div class="ml" style="top:46%;left:41%">南投鹿谷</div>
+        <div class="mp" style="top:68%;left:54%"></div><div class="ml" style="top:60%;left:57%">阿里山</div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M15 28 Q27 41 38 54 Q46 61 54 68" stroke="#2d5a27" stroke-width="1.5" fill="none" stroke-dasharray="3,2" opacity=".6"/>
+        </svg>
+        <div style="position:absolute;bottom:8px;right:10px;background:rgba(255,255,255,.9);padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;color:#2d5a27">行程地圖</div>
+      </div>
+      <!-- Timeline -->
+      <div class="tl-wrap">
+        <div class="d-hdr2"><div class="d-num">1</div><div style="font-size:15px;font-weight:700">Day 1 — 台北 → 南投鹿谷</div></div>
+        <div class="tl-item"><div class="tl-t">08:00</div><div><div class="tl-n">從台北高鐵出發</div><div class="tl-s">高鐵台中站轉客運前往鹿谷</div></div></div>
+        <div class="tl-item"><div class="tl-t">11:00</div><div><div class="tl-n">凍頂茶山 AI 導覽</div><div class="tl-s">掃 QR Code 了解凍頂文化起源</div></div></div>
+        <div class="tl-item"><div class="tl-t">13:00</div><div><div class="tl-n">農家午餐</div><div class="tl-s">茶葉入菜，了解農產食文化</div></div></div>
+        <div class="tl-item"><div class="tl-t">14:30</div><div><div class="tl-n">手工採茶體驗</div><div class="tl-s">親手體驗秋茶採收（限季節）</div></div></div>
+        <div class="tl-item"><div class="tl-t">18:00</div><div><div class="tl-n">農村民宿 Check-in</div><div class="tl-s">夜間與茶農交流文化故事</div></div></div>
+
+        <div class="d-hdr2"><div class="d-num">2</div><div style="font-size:15px;font-weight:700">Day 2 — 阿里山達邦茶園</div></div>
+        <div class="tl-item"><div class="tl-t">07:30</div><div><div class="tl-n">晨間雲霧茶園巡禮</div><div class="tl-s">雲海與高山烏龍最美時刻</div></div></div>
+        <div class="tl-item"><div class="tl-t">10:00</div><div><div class="tl-n">達邦茶園 QR 體驗</div><div class="tl-s">鄒族農耕文化 AI 現場導覽</div></div></div>
+        <div class="tl-item"><div class="tl-t">13:00</div><div><div class="tl-n">製茶工坊 + 農特產</div><div class="tl-s">帶回自己手做的茶葉</div></div></div>
+        <div class="tl-item"><div class="tl-t">16:00</div><div><div class="tl-n">返台北</div><div class="tl-s">高鐵回程</div></div></div>
+      </div>
+      <div style="height:80px"></div>
+      <div class="save-bar">
+        <button class="btn bo" style="flex:.8;font-size:14px">🔖 儲存行程</button>
+        <button class="btn bg" style="font-size:14px" onclick="go('s7')">📱 開始體驗</button>
+      </div>
+    </div>
+
+    <!-- ═══ S7 QR SCAN ═══ -->
+    <div class="screen" id="s7" style="background:#111;color:#fff">
+      <div class="qr-bk" onclick="back()">←</div>
+      <!-- Viewfinder -->
+      <div class="vf" onclick="showSheet()">
+        <div class="corners">
+          <div class="cn tl"></div><div class="cn tr"></div>
+          <div class="cn bl"></div><div class="cn br"></div>
+          <div class="scan-line"></div>
+        </div>
+        <div class="vf-hint">對準景點的 QR Code<br><span style="font-size:11px;opacity:.6">點擊螢幕模擬掃描</span></div>
+      </div>
+      <!-- Bottom info -->
+      <div style="padding:16px 20px">
+        <div style="font-size:12px;font-weight:700;opacity:.5;margin-bottom:10px">📍 行程中的 QR 景點</div>
+        <div class="hscroll">
+          <div style="flex-shrink:0;background:rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;font-size:12px;white-space:nowrap">🍵 凍頂茶山</div>
+          <div style="flex-shrink:0;background:rgba(74,140,63,.25);border:1px solid #4a8c3f;border-radius:12px;padding:10px 14px;font-size:12px;white-space:nowrap;color:#78b44a">🌿 達邦茶園 ← 目前</div>
+          <div style="flex-shrink:0;background:rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;font-size:12px;white-space:nowrap">🏡 農村民宿</div>
+        </div>
+      </div>
+      <!-- Result sheet -->
+      <div class="sheet" id="sheet">
+        <div class="sh-handle"></div>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px">
+          <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--g2),var(--g3));border-radius:14px;display:grid;place-items:center;font-size:28px;flex-shrink:0">🌿</div>
+          <div>
+            <div style="font-size:17px;font-weight:800">阿里山達邦茶園</div>
+            <div style="font-size:12px;color:var(--t3);margin-top:2px">海拔 1,400m · 鄒族傳統農地 · 樹齡 80年+</div>
+          </div>
+        </div>
+        <div style="background:rgba(74,140,63,.07);border-left:3px solid var(--g3);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:16px;font-size:13px;line-height:1.7;color:var(--t2)">
+          「這裡的茶樹已有80年以上樹齡，是鄒族部落在日治時期保留下來的古老茶園。這片土地，承載著超過三個世代的農耕記憶，也是台灣最具歷史意義的高山茶產區之一…」
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn bo" style="font-size:14px" onclick="go('s4')">💬 詢問 AI</button>
+          <button class="btn bg" style="font-size:14px">🎙️ 語音導覽</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ S8 PROFILE SELECT ═══ -->
+    <div class="screen" id="s8">
+      <div class="hdr"><div class="back" onclick="back()">←</div><div class="htitle">個人檔案</div></div>
+      <!-- Avatar -->
+      <div style="text-align:center;padding:0 20px 24px">
+        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g4));display:grid;place-items:center;font-size:36px;margin:0 auto 12px;box-shadow:0 4px 16px rgba(74,140,63,.3)">👤</div>
+        <div style="font-size:20px;font-weight:800;margin-bottom:4px">陳旻妤</div>
+        <div style="font-size:13px;color:var(--t3)">112306075@g.nccu.edu.tw</div>
+      </div>
+      <!-- Role cards -->
+      <div style="padding:0 20px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:14px">你的使用身份是？</div>
+        <div onclick="go('s9')" style="background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:12px;border:2px solid var(--g3);cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;gap:16px;align-items:center">
+          <div style="width:56px;height:56px;background:linear-gradient(135deg,#e8f5e1,#c8e6c9);border-radius:14px;display:grid;place-items:center;font-size:28px;flex-shrink:0">🧳</div>
+          <div style="flex:1">
+            <div style="font-size:16px;font-weight:800;color:var(--g2);margin-bottom:4px">體驗者</div>
+            <div style="font-size:12px;color:var(--t2);line-height:1.55">喜愛農業文化的旅遊者<br>個人偏好・收藏行程・個人檔案照片</div>
+          </div>
+          <div style="color:var(--g3);font-size:20px;font-weight:300">›</div>
+        </div>
+        <div onclick="go('s10')" style="background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.07);border:2px solid transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;gap:16px;align-items:center">
+          <div style="width:56px;height:56px;background:linear-gradient(135deg,#fff9c4,#fff176);border-radius:14px;display:grid;place-items:center;font-size:28px;flex-shrink:0">🌾</div>
+          <div style="flex:1">
+            <div style="font-size:16px;font-weight:800;color:var(--earth);margin-bottom:4px">農民</div>
+            <div style="font-size:12px;color:var(--t2);line-height:1.55">提供農業文化體驗的農場主<br>AI 文案生成・農場資訊・時間設定</div>
+          </div>
+          <div style="color:var(--earth);font-size:20px;font-weight:300">›</div>
+        </div>
+      </div>
+      <!-- Settings -->
+      <div style="padding:20px">
+        <div style="font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">設定</div>
+        <div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+          <div style="padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;font-size:14px"><span>🌏 語言</span><span style="color:var(--t3)">繁體中文</span></div>
+          <div style="padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;font-size:14px"><span>🔔 通知</span><span style="color:var(--t3)">開啟</span></div>
+          <div style="padding:14px 16px;font-size:14px;color:#e53935;cursor:pointer">登出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ S9 體驗者 PROFILE ═══ -->
+    <div class="screen" id="s9">
+      <div class="hdr"><div class="back" onclick="back()">←</div><div class="htitle">體驗者 個人檔案</div><span style="font-size:20px">🧳</span></div>
+      <div style="text-align:center;padding:0 20px 20px">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g4));display:grid;place-items:center;font-size:32px;margin:0 auto 10px;box-shadow:0 4px 12px rgba(74,140,63,.25)">👤</div>
+        <div style="font-size:18px;font-weight:800">陳旻妤</div>
+        <div style="font-size:12px;color:var(--t3);margin-top:2px">體驗者 · 台北</div>
+      </div>
+      <!-- 個人偏好 -->
+      <div style="padding:0 20px;margin-bottom:20px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px">個人偏好</div>
+        <div style="background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+          <div style="font-size:12px;color:var(--t3);margin-bottom:10px">你喜愛的農業文化類型</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="chip cf" style="font-size:12px;padding:5px 12px">🍵 茶文化</span>
+            <span class="chip cf" style="font-size:12px;padding:5px 12px">🌾 稻米</span>
+            <span class="chip co" style="font-size:12px;padding:5px 12px">🌺 原住民祭典</span>
+            <span class="chip co" style="font-size:12px;padding:5px 12px">🍍 果物農場</span>
+            <span class="chip co" style="font-size:12px;padding:5px 12px">🎋 傳統工藝</span>
+            <span class="chip" style="font-size:12px;padding:5px 12px;background:var(--cream);color:var(--g3);border:1.5px dashed var(--g3)">＋ 新增</span>
+          </div>
+        </div>
+      </div>
+      <!-- 收藏行程 -->
+      <div style="padding:0 20px;margin-bottom:20px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px">收藏行程</div>
+        <div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+          <div onclick="go('s6')" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--bd);cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--g3),var(--g4));border-radius:10px;display:grid;place-items:center;font-size:18px;flex-shrink:0">🍵</div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">秋茶季 · 2天1夜</div><div style="font-size:11px;color:var(--t3)">南投鹿谷 · 阿里山 · 10月</div></div>
+            <div style="font-size:12px;color:var(--g3);font-weight:600">查看</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer">
+            <div style="width:40px;height:40px;background:linear-gradient(135deg,#fff9c4,#fff176);border-radius:10px;display:grid;place-items:center;font-size:18px;flex-shrink:0">🌾</div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">池上稻米文化 · 1天</div><div style="font-size:11px;color:var(--t3)">台東池上 · 10月</div></div>
+            <div style="font-size:12px;color:var(--g3);font-weight:600">查看</div>
+          </div>
+        </div>
+      </div>
+      <!-- 個人檔案照片 -->
+      <div style="padding:0 20px 32px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px">個人檔案照片</div>
+        <div style="background:#fff;border-radius:14px;padding:24px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:center;border:2px dashed var(--bd)">
+          <div style="font-size:36px;margin-bottom:8px">📷</div>
+          <div style="font-size:14px;font-weight:600;margin-bottom:4px;color:var(--t2)">上傳個人照片</div>
+          <div style="font-size:12px;color:var(--t3);line-height:1.6">讓農民認識你<br>提升體驗預訂成功率</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ S10 農民 PROFILE ═══ -->
+    <div class="screen" id="s10">
+      <div class="hdr"><div class="back" onclick="back()">←</div><div class="htitle">農民 個人檔案</div><span style="font-size:20px">🌾</span></div>
+      <div style="text-align:center;padding:0 20px 20px">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#fff9c4,#f9a825);display:grid;place-items:center;font-size:32px;margin:0 auto 10px;box-shadow:0 4px 12px rgba(249,168,37,.3)">🌿</div>
+        <div style="font-size:18px;font-weight:800">鹿谷凍頂茶農</div>
+        <div style="font-size:12px;color:var(--t3);margin-top:2px">南投縣鹿谷鄉 · 茶文化</div>
+      </div>
+      <!-- 時間設定 -->
+      <div style="padding:0 20px;margin-bottom:20px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px">時間設定</div>
+        <div style="background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+          <div style="font-size:12px;color:var(--t3);margin-bottom:12px">設定開放體驗時段</div>
+          <div style="display:flex;gap:6px;margin-bottom:12px">
+            <div style="flex:1;padding:8px 4px;border-radius:8px;text-align:center;font-size:12px;background:var(--cream);color:var(--t3)">一</div>
+            <div style="flex:1;padding:8px 4px;border-radius:8px;text-align:center;font-size:12px;background:var(--cream);color:var(--t3)">二</div>
+            <div style="flex:1;padding:8px 4px;border-radius:8px;text-align:center;font-size:12px;background:var(--cream);color:var(--t3)">三</div>
+            <div style="flex:1;padding:8px 4px;border-radius:8px;text-align:center;font-size:12px;background:var(--cream);color:var(--t3)">四</div>
+            <div style="flex:1;padding:8px 4px;border-radius:8px;text-align:center;font-size:12px;background:var(--cream);color:var(--t3)">五</div>
+            <div style="flex:1;padding:8px 4px;border-radius:8px;text-align:center;font-size:12px;background:var(--g3);color:#fff;font-weight:700">六</div>
+            <div style="flex:1;padding:8px 4px;border-radius:8px;text-align:center;font-size:12px;background:var(--g3);color:#fff;font-weight:700">日</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="flex:1;background:rgba(74,140,63,.1);border-radius:8px;padding:8px;text-align:center;font-size:12px;font-weight:600;color:var(--g2)">10:00–12:00</div>
+            <div style="flex:1;background:rgba(74,140,63,.1);border-radius:8px;padding:8px;text-align:center;font-size:12px;font-weight:600;color:var(--g2)">14:00–16:00</div>
+            <div style="flex:1;background:var(--cream);border-radius:8px;padding:8px;text-align:center;font-size:12px;color:var(--t3);border:1px dashed var(--bd)">＋ 時段</div>
+          </div>
+        </div>
+      </div>
+      <!-- AI 生成入口 -->
+      <div style="padding:0 20px 32px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px">AI 內容生成</div>
+        <div onclick="go('s11')" style="background:linear-gradient(135deg,var(--g2),var(--g3));border-radius:16px;padding:20px;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent">
+          <div style="font-size:11px;font-weight:700;opacity:.7;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">農民專屬功能</div>
+          <div style="font-size:18px;font-weight:800;margin-bottom:6px">生成農場文案 & 產品故事</div>
+          <div style="font-size:13px;opacity:.82;margin-bottom:16px;line-height:1.6">輸入農場資訊，AI 自動生成品牌文案、產品故事和角色設定</div>
+          <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;display:flex;gap:10px;font-size:12px">
+            <span>📝 文案生成</span><span>•</span><span>📖 產品故事</span><span>•</span><span>🎭 產品角色</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ S11 生成頁 ═══ -->
+    <div class="screen" id="s11">
+      <div class="hdr"><div class="back" onclick="back()">←</div><div class="htitle">AI 農場文案生成</div></div>
+      <!-- 輸入產品資訊 -->
+      <div style="padding:0 20px;margin-bottom:20px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px">輸入產品資訊</div>
+        <div style="background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+          <div style="margin-bottom:12px">
+            <div style="font-size:12px;color:var(--t3);font-weight:600;margin-bottom:6px">產品名稱</div>
+            <div style="background:var(--cream);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--t2)">凍頂烏龍 秋茶</div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="font-size:12px;color:var(--t3);font-weight:600;margin-bottom:6px">產品類型</div>
+            <div style="background:var(--cream);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--t2)">高山烏龍茶</div>
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--t3);font-weight:600;margin-bottom:6px">產品特色</div>
+            <div style="background:var(--cream);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--t2);line-height:1.5">海拔 800m，秋天晝夜溫差大，茶葉甘甜回甘，帶有花香</div>
+          </div>
+        </div>
+      </div>
+      <!-- 農場資訊 -->
+      <div style="padding:0 20px;margin-bottom:20px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px">農場資訊</div>
+        <div style="background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--t3)">農場名稱</span><span style="font-weight:600">凍頂春風茶園</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--t3)">地點</span><span style="font-weight:600">南投縣鹿谷鄉</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--t3)">海拔</span><span style="font-weight:600">800–1,000m</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--t3)">耕作歷史</span><span style="font-weight:600">三代 · 60年以上</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 文化類別勾選 -->
+      <div style="padding:0 20px;margin-bottom:20px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px">文化類別勾選</div>
+        <div style="background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+          <div style="font-size:12px;color:var(--t3);margin-bottom:12px">選擇你想呈現的農業文化面向</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer"><input type="checkbox" checked> 🍵 茶文化傳承</label>
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer"><input type="checkbox" checked> ⛰️ 高山農業環境</label>
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer"><input type="checkbox"> 👨‍👩‍👧 家族農耕記憶</label>
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer"><input type="checkbox"> 🌱 永續農業實踐</label>
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer"><input type="checkbox" checked> 🎋 手工製茶工藝</label>
+          </div>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+      <!-- Generate button -->
+      <div style="padding:12px 20px 32px;position:sticky;bottom:0;background:rgba(253,251,247,.95);backdrop-filter:blur(12px);border-top:1px solid var(--bd)">
+        <button class="btn bg" id="genBtn" onclick="showGenResult()" style="font-size:14px">🤖 AI 生成文案、產品故事、產品角色</button>
+      </div>
+      <!-- Generated result sheet -->
+      <div class="gen-sheet" id="genSheet">
+        <div class="sh-handle"></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <div style="width:32px;height:32px;background:var(--g3);border-radius:50%;display:grid;place-items:center;color:#fff;font-size:14px">✨</div>
+          <div style="font-size:16px;font-weight:800">AI 生成完成</div>
+        </div>
+        <!-- 品牌文案 -->
+        <div class="gen-block">
+          <div class="gen-label">📝 品牌文案</div>
+          <div class="gen-text">「凍頂春風茶園，坐落於南投鹿谷 800 公尺的山腰間，三代茶農以手心溫度，守護這片被秋霧輕撫的茶樹。每一片葉，都是大地與人情的交融——帶著花香的甘甜，是秋天最深情的告白。」</div>
+        </div>
+        <!-- 產品故事 -->
+        <div class="gen-block">
+          <div class="gen-label">📖 產品故事</div>
+          <div class="gen-text">凍頂烏龍秋茶的故事，從每年九月山上第一陣涼意開始。晝夜溫差讓茶葉放慢生長，把甜分慢慢積在葉芯。老茶農說：「慢一點，才會甜。」這一泡秋茶，是大自然教我們的耐心。</div>
+        </div>
+        <!-- 產品角色 -->
+        <div class="gen-block">
+          <div class="gen-label">🎭 產品角色</div>
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <div style="width:50px;height:50px;background:linear-gradient(135deg,#c8e6c9,#4a8c3f);border-radius:14px;display:grid;place-items:center;font-size:24px;flex-shrink:0">🌿</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;margin-bottom:4px;color:var(--g2)">凍頂小茶仙 · 阿翠</div>
+              <div style="font-size:13px;line-height:1.65;color:var(--t2)">生長在海拔 800m 茶園的精靈，個性沉穩又帶點溫柔的甘甜。最愛在秋天霧氣剛散的早晨，帶著旅人認識茶樹的一生。口頭禪：「慢慢來，茶香才出得來。」</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button class="btn bo" style="font-size:13px">🔄 重新生成</button>
+          <button class="btn bg" style="font-size:13px">💾 儲存 & 使用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ sL LOGIN ═══ -->
+    <div class="screen" id="sL">
+      <!-- Top brand -->
+      <div style="background:linear-gradient(160deg,#1e4d1a,#2d6a27 60%,#4a8c3f);padding:60px 24px 44px;text-align:center;color:#fff">
+        <div style="font-size:48px;margin-bottom:10px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.25))">🌾</div>
+        <div style="font-size:20px;font-weight:800;line-height:1.3">台灣農業<br>文化體驗</div>
+      </div>
+      <!-- Form panel -->
+      <div style="background:var(--warm);border-radius:28px 28px 0 0;margin-top:-18px;padding:28px 24px 40px">
+        <div style="font-size:22px;font-weight:800;margin-bottom:4px">歡迎回來 👋</div>
+        <div style="font-size:13px;color:var(--t3);margin-bottom:24px">請登入你的帳號繼續</div>
+        <div class="inp-wrap">
+          <div class="inp-lbl">電子郵件</div>
+          <input class="inp" type="email" placeholder="your@email.com">
+        </div>
+        <div class="inp-wrap">
+          <div class="inp-lbl">密碼</div>
+          <input class="inp" type="password" placeholder="••••••••">
+        </div>
+        <div style="text-align:right;margin:-4px 0 20px">
+          <span style="font-size:13px;color:var(--g3);font-weight:600;cursor:pointer">忘記密碼？</span>
+        </div>
+        <button class="btn bg" onclick="go('s2')" style="margin-bottom:12px">登入</button>
+        <div class="or-line">或</div>
+        <button class="btn bo" onclick="go('sR')">建立新帳號</button>
+        <div style="text-align:center;margin-top:20px;font-size:12px;color:var(--t3);line-height:1.7">
+          繼續即表示你同意我們的<br>
+          <span style="color:var(--g3)">服務條款</span> 與 <span style="color:var(--g3)">隱私政策</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ sR REGISTER ═══ -->
+    <div class="screen" id="sR">
+      <div class="hdr"><div class="back" onclick="back()">←</div><div class="htitle">建立帳號</div></div>
+      <div style="padding:0 24px 40px">
+        <div class="inp-wrap">
+          <div class="inp-lbl">姓名</div>
+          <input class="inp" type="text" placeholder="你的名字">
+        </div>
+        <div class="inp-wrap">
+          <div class="inp-lbl">電子郵件</div>
+          <input class="inp" type="email" placeholder="your@email.com">
+        </div>
+        <div class="inp-wrap" style="margin-bottom:28px">
+          <div class="inp-lbl">密碼</div>
+          <input class="inp" type="password" placeholder="至少 8 個字元">
+        </div>
+        <!-- Role selection -->
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px">你的使用身份</div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:14px">請選擇一個適合你的角色</div>
+        <div class="role-row" style="margin-bottom:32px">
+          <div class="role-card sel" id="roleExp" onclick="selRole('exp')">
+            <div class="ri">🧳</div>
+            <div class="rn" id="roleExpName" style="color:var(--g2)">體驗者</div>
+            <div class="rs">探索農業文化<br>規劃旅遊體驗</div>
+          </div>
+          <div class="role-card" id="roleFar" onclick="selRole('far')">
+            <div class="ri">🌾</div>
+            <div class="rn" id="roleFarName">農民</div>
+            <div class="rs">管理農場資訊<br>AI 文案生成</div>
+          </div>
+        </div>
+        <button class="btn bg" onclick="register()" style="margin-bottom:14px">開始使用</button>
+        <div style="text-align:center;font-size:13px;color:var(--t3)">
+          已有帳號？<span style="color:var(--g3);font-weight:600;cursor:pointer" onclick="back()">返回登入</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ sP PREFERENCE SURVEY ═══ -->
+    <div class="screen" id="sP">
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,var(--g2),var(--g3));padding:56px 24px 24px;color:#fff">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <div style="background:rgba(255,255,255,.25);border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700">第一次設定</div>
+          <div style="font-size:11px;opacity:.7">快速完成，隨時可修改</div>
+        </div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:6px">你對什麼最感興趣？</div>
+        <div style="font-size:13px;opacity:.8;line-height:1.6">選擇偏好，讓 AI 為你推薦<br>最適合的農業文化體驗</div>
+      </div>
+      <!-- Progress bar -->
+      <div style="background:rgba(74,140,63,.08);padding:14px 24px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--g3);margin-bottom:6px">
+          <span>偏好完成度</span><span id="prefPct">0%</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="prefProg" style="width:0%"></div></div>
+      </div>
+      <!-- Survey body -->
+      <div style="padding:20px 20px 0">
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px">農業文化興趣
+          <span style="font-size:12px;color:var(--t3);font-weight:400">（可多選）</span>
+        </div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:12px">點選你感興趣的類型</div>
+        <div class="pref-grid">
+          <div class="pref-card" onclick="selPref(this)"><div class="pi">🍵</div><div class="pn">茶文化</div></div>
+          <div class="pref-card" onclick="selPref(this)"><div class="pi">🌾</div><div class="pn">稻米文化</div></div>
+          <div class="pref-card" onclick="selPref(this)"><div class="pi">🌺</div><div class="pn">原住民<br>祭典</div></div>
+          <div class="pref-card" onclick="selPref(this)"><div class="pi">🍍</div><div class="pn">熱帶果物</div></div>
+          <div class="pref-card" onclick="selPref(this)"><div class="pi">🎋</div><div class="pn">傳統工藝</div></div>
+          <div class="pref-card" onclick="selPref(this)"><div class="pi">🏡</div><div class="pn">鄉村生活</div></div>
+        </div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px">旅遊風格
+          <span style="font-size:12px;color:var(--t3);font-weight:400">（單選）</span>
+        </div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:12px">選擇最符合你的旅遊方式</div>
+        <div class="style-grid">
+          <div class="style-card" onclick="selStyle(this)"><div class="si">🎒</div><div class="sn">個人深度體驗</div></div>
+          <div class="style-card" onclick="selStyle(this)"><div class="si">👨‍👩‍👧</div><div class="sn">家庭親子旅遊</div></div>
+          <div class="style-card" onclick="selStyle(this)"><div class="si">👯</div><div class="sn">朋友同行</div></div>
+          <div class="style-card" onclick="selStyle(this)"><div class="si">📷</div><div class="sn">攝影 & 記錄</div></div>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+      <!-- CTA -->
+      <div style="padding:12px 20px 32px;position:sticky;bottom:0;background:rgba(253,251,247,.95);backdrop-filter:blur(12px);border-top:1px solid var(--bd)">
+        <button class="btn bg" onclick="go('s2')" style="margin-bottom:10px">🌾 完成！開始探索農業文化</button>
+        <div style="text-align:center;font-size:13px;color:var(--t3);cursor:pointer" onclick="go('s2')">跳過，稍後再設定</div>
+      </div>
+    </div>
+
+  </div><!-- /screen-area -->
+</div><!-- /phone -->
+
+<!-- ── LEGEND ── -->
+<div class="legend">
+  <h3>畫面導覽</h3>
+  <div class="leg-row" onclick="go('sL')"><div class="dot" id="d-sL"></div><span>⓪ 登入畫面</span></div>
+  <div class="leg-row" onclick="go('sR')"><div class="dot" id="d-sR"></div><span>⓪ 註冊＋身份選擇</span></div>
+  <div class="leg-row" onclick="go('sP')"><div class="dot" id="d-sP"></div><span>⓪ 偏好調查（初次）</span></div>
+  <div class="leg-row" onclick="go('s1')"><div class="dot on" id="d-s1"></div><span>① 開場畫面</span></div>
+  <div class="leg-row" onclick="go('s2')"><div class="dot" id="d-s2"></div><span>② 首頁</span></div>
+  <div class="leg-row" onclick="go('s3')"><div class="dot" id="d-s3"></div><span>③ 文化詳情</span></div>
+  <div class="leg-row" onclick="go('s4')"><div class="dot" id="d-s4"></div><span>④ AI 問答</span></div>
+  <div class="leg-row" onclick="go('s5')"><div class="dot" id="d-s5"></div><span>⑤ 行程設定</span></div>
+  <div class="leg-row" onclick="go('s6')"><div class="dot" id="d-s6"></div><span>⑥ 行程結果</span></div>
+  <div class="leg-row" onclick="go('s7')"><div class="dot" id="d-s7"></div><span>⑦ QR 現場體驗</span></div>
+  <div class="leg-row" onclick="go('s8')"><div class="dot" id="d-s8"></div><span>⑧ 個人檔案（身份）</span></div>
+  <div class="leg-row" onclick="go('s9')"><div class="dot" id="d-s9"></div><span>⑨ 體驗者個人檔案</span></div>
+  <div class="leg-row" onclick="go('s10')"><div class="dot" id="d-s10"></div><span>⑩ 農民個人檔案</span></div>
+  <div class="leg-row" onclick="go('s11')"><div class="dot" id="d-s11"></div><span>⑪ AI 文案生成</span></div>
+  <div style="margin-top:16px;font-size:11px;opacity:.45;line-height:1.7">點選名稱或在手機<br>畫面上點互動元素<br>來切換畫面</div>
+</div>
+
+<script>
+let cur='s1', hist=[];
+function go(id){
+  if(id===cur)return;
+  const c=document.getElementById(cur), n=document.getElementById(id);
+  hist.push(cur);
+  c.style.transition='transform .32s cubic-bezier(.4,0,.2,1),opacity .32s';
+  c.style.transform='translateX(-28%)'; c.style.opacity='.5';
+  n.style.transition='none'; n.style.transform='translateX(100%)'; n.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    n.style.transition='transform .32s cubic-bezier(.4,0,.2,1)';
+    n.style.transform='translateX(0)';
+  }));
+  setTimeout(()=>{
+    c.classList.remove('active'); c.style.cssText='';
+    n.style.transition='';
+  },340);
+  cur=id; upd();
+  if(id==='s7') document.getElementById('sheet').classList.remove('show');
+  document.getElementById('sbar').className='sbar'+(id==='s1'||id==='s7'||id==='sL'?' w':'');
+}
+function back(){
+  if(!hist.length)return;
+  const p=hist.pop();
+  const c=document.getElementById(cur), pEl=document.getElementById(p);
+  c.style.transition='transform .32s cubic-bezier(.4,0,.2,1)';
+  c.style.transform='translateX(100%)';
+  pEl.style.transition='none'; pEl.style.transform='translateX(-28%)'; pEl.style.opacity='.5';
+  pEl.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    pEl.style.transition='transform .32s cubic-bezier(.4,0,.2,1),opacity .32s';
+    pEl.style.transform='translateX(0)'; pEl.style.opacity='1';
+  }));
+  setTimeout(()=>{
+    c.classList.remove('active'); c.style.cssText='';
+    pEl.style.transition=''; pEl.style.opacity='';
+  },340);
+  cur=p; upd();
+  document.getElementById('sbar').className='sbar'+(p==='s1'||p==='s7'||p==='sL'?' w':'');
+}
+function upd(){
+  document.querySelectorAll('.dot').forEach(d=>d.classList.remove('on'));
+  const d=document.getElementById('d-'+cur);
+  if(d)d.classList.add('on');
+}
+function showSheet(){ document.getElementById('sheet').classList.add('show'); }
+function showGenResult(){
+  const btn=document.getElementById('genBtn');
+  btn.textContent='⏳ AI 生成中…'; btn.disabled=true;
+  setTimeout(()=>{
+    btn.textContent='🤖 AI 生成文案、產品故事、產品角色'; btn.disabled=false;
+    document.getElementById('genSheet').classList.add('show');
+  },1600);
+}
+function selM(el){ document.querySelectorAll('.mb').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+function selI(el){ document.querySelectorAll('.ib').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+function selD(el){ document.querySelectorAll('.dopt').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+
+// ── Login / Register / Preference Survey ──
+let selectedRole='exp';
+function selRole(type){
+  selectedRole=type;
+  const exp=document.getElementById('roleExp'), far=document.getElementById('roleFar');
+  exp.className='role-card'+(type==='exp'?' sel':'');
+  far.className='role-card'+(type==='far'?' sel-f':'');
+  document.getElementById('roleExpName').style.color=type==='exp'?'var(--g2)':'';
+  document.getElementById('roleFarName').style.color=type==='far'?'var(--earth)':'';
+}
+function register(){
+  go(selectedRole==='exp'?'sP':'s10');
+}
+function selPref(el){
+  el.classList.toggle('sel');
+  updPrefProg();
+}
+function selStyle(el){
+  document.querySelectorAll('.style-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  updPrefProg();
+}
+function updPrefProg(){
+  const pcts=document.querySelectorAll('.pref-card.sel').length;
+  const hasStyle=document.querySelectorAll('.style-card.sel').length>0;
+  const pct=Math.round(((pcts+(hasStyle?1:0))/7)*100);
+  document.getElementById('prefPct').textContent=pct+'%';
+  document.getElementById('prefProg').style.width=pct+'%';
+}
+
+const AI={
+  '行程':'好的！帶你去行程設定 📅',
+  '稻米':'台灣稻米文化以台東池上最有名！黃金稻海在 10 月達到最美，還有花蓮富里散布著金針花的稻田景觀 🌾',
+  '豐年祭':'豐年祭是阿美族最重要的農業祭典，7–8 月稻米收成後舉行 🌺 花蓮的部落最為盛大，外國訪客需提前聯繫以示尊重。',
+  '外國人':'非常歡迎外國旅客！許多農場和茶園都有英語解說，QR Code 導覽也支援英語和日語 🌍'
+};
+const DEF=['台灣農業文化非常多元，從平地稻米到山區的茶，每種都有獨特的季節節奏。你對哪個最有興趣？','根據你的旅行月份，我可以推薦最適合的農業體驗和地點。','農業文化的特別之處是它的「時間性」——每個季節都有不同農事活動，錯過就要等明年。'];
+function sendMsg(){
+  const inp=document.getElementById('cinput'), t=inp.value.trim(); if(!t)return;
+  const area=document.getElementById('msgs');
+  area.innerHTML+=`<div class="msg u"><div class="m-av u">👤</div><div class="bub u">${t}</div></div>`;
+  const tid='t'+Date.now();
+  area.innerHTML+=`<div class="msg" id="${tid}"><div class="m-av a">🌿</div><div class="bub a" style="display:flex;gap:4px;align-items:center;padding:12px 14px"><span style="width:7px;height:7px;border-radius:50%;background:#78b44a;animation:blink 1.2s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:#78b44a;animation:blink 1.2s .2s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:#78b44a;animation:blink 1.2s .4s infinite"></span></div></div>`;
+  area.scrollTop=area.scrollHeight; inp.value='';
+  let rep=null; for(const[k,v]of Object.entries(AI)){if(t.includes(k)){rep=v;break;}}
+  if(!rep)rep=DEF[Math.floor(Math.random()*DEF.length)];
+  setTimeout(()=>{
+    document.getElementById(tid)?.remove();
+    area.innerHTML+=`<div class="msg"><div class="m-av a">🌿</div><div class="bub a">${rep}</div></div>`;
+    area.scrollTop=area.scrollHeight;
+    if(t.includes('行程'))setTimeout(()=>go('s5'),700);
+  },1200);
+}
+function qreply(t){ document.getElementById('cinput').value=t; sendMsg(); }
+document.getElementById('cinput').addEventListener('keydown',e=>{ if(e.key==='Enter')sendMsg(); });
+</script>
+</body>
+</html>
