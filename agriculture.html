@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>台灣農業文化體驗平台</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232d6a27'/><path d='M50 15 C50 15 20 35 20 58 C20 74 34 85 50 85 C66 85 80 74 80 58 C80 35 50 15 50 15Z' fill='%23fff' opacity='.95'/><line x1='50' y1='85' x2='50' y2='45' stroke='%232d6a27' stroke-width='5' stroke-linecap='round'/></svg>">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --g1: #1e4d1a;
+      --g2: #2d5a27;
+      --g3: #4a8c3f;
+      --g4: #78b44a;
+      --earth: #7a5c10;
+      --cream: #f5f0e8;
+      --warm:  #fdfbf7;
+      --text:  #1a1a1a;
+      --t2:    #555;
+      --t3:    #999;
+      --bd:    #e8e3da;
+      --shadow: 0 4px 24px rgba(0,0,0,.10);
+      --radius: 14px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, 'PingFang TC', '微軟正黑體', sans-serif;
+      color: var(--text);
+      background: var(--warm);
+      line-height: 1.7;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(253,251,247,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: .6rem; font-weight: 700; font-size: 1.1rem; color: var(--g2); }
+    .nav-links { display: flex; gap: 2rem; font-size: .9rem; }
+    .nav-links a { color: var(--t2); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--g3); }
+    .nav-cta {
+      background: var(--g3); color: #fff;
+      padding: .45rem 1.2rem; border-radius: 99px;
+      font-size: .88rem; font-weight: 600;
+      transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--g2); }
+
+    /* ─── Hero ─── */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #e8f5e1 0%, #f5f0e8 55%, #fff8e7 100%);
+      display: flex; align-items: center;
+      padding: 80px 2rem 4rem;
+    }
+    .hero-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(74,140,63,.12); color: var(--g2);
+      padding: .3rem .9rem; border-radius: 99px;
+      font-size: .82rem; font-weight: 600; margin-bottom: 1.2rem;
+    }
+    .hero-title { font-size: 2.8rem; font-weight: 800; line-height: 1.25; margin-bottom: 1rem; }
+    .hero-title em { font-style: normal; color: var(--g3); }
+    .hero-sub { font-size: 1.05rem; color: var(--t2); margin-bottom: 2rem; max-width: 440px; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--g3); color: #fff;
+      padding: .75rem 1.8rem; border-radius: 99px;
+      font-size: 1rem; font-weight: 600; border: none; cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .btn-primary:hover { background: var(--g2); transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent; color: var(--g2);
+      padding: .75rem 1.8rem; border-radius: 99px;
+      font-size: 1rem; font-weight: 600;
+      border: 2px solid var(--g3); cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-secondary:hover { background: var(--g3); color: #fff; transform: translateY(-2px); }
+
+    /* ─── Phone mockup in hero ─── */
+    .hero-phone-wrap {
+      display: flex; justify-content: center; align-items: center;
+    }
+    .hero-phone {
+      width: 260px;
+      background: #1a1a1a;
+      border-radius: 40px;
+      padding: 10px;
+      box-shadow: 0 0 0 1px #3a3a3a, 0 0 0 2px #222, 0 32px 80px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.05);
+      position: relative;
+    }
+    .hero-phone::before {
+      content: ''; position: absolute; left: -2px; top: 80px;
+      width: 2px; height: 24px; background: #3a3a3a; border-radius: 2px 0 0 2px;
+      box-shadow: 0 36px 0 #3a3a3a, 0 64px 0 #3a3a3a;
+    }
+    .hero-phone::after {
+      content: ''; position: absolute; right: -2px; top: 100px;
+      width: 2px; height: 52px; background: #3a3a3a; border-radius: 0 2px 2px 0;
+    }
+    .hero-screen {
+      width: 240px; height: 520px;
+      border-radius: 30px; overflow: hidden;
+      background: var(--warm); position: relative;
+    }
+    .hero-island {
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 80px; height: 22px; background: #000; border-radius: 14px; z-index: 10;
+    }
+    .phone-home {
+      position: absolute; inset: 0;
+      background: var(--warm);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .phone-topbar {
+      padding: 38px 14px 8px;
+    }
+    .phone-greeting { font-size: 9px; color: var(--t3); margin-bottom: 1px; }
+    .phone-title { font-size: 15px; font-weight: 800; color: var(--text); }
+    .phone-title span { color: var(--g3); }
+    .phone-search {
+      margin: 6px 14px 10px;
+      background: var(--cream); border-radius: 8px;
+      padding: 7px 10px; font-size: 9px; color: var(--t3);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .phone-banner {
+      margin: 0 14px 10px;
+      background: linear-gradient(135deg, var(--g2), var(--g3));
+      border-radius: 10px; padding: 10px 12px; color: #fff;
+    }
+    .phone-banner-lbl { font-size: 8px; opacity: .7; margin-bottom: 2px; }
+    .phone-banner-title { font-size: 11px; font-weight: 800; margin-bottom: 1px; }
+    .phone-banner-sub { font-size: 8px; opacity: .75; }
+    .phone-sec { padding: 0 14px; font-size: 10px; font-weight: 700; margin-bottom: 7px; }
+    .phone-cards {
+      display: flex; gap: 8px; padding: 0 14px; overflow: hidden;
+    }
+    .phone-card {
+      flex-shrink: 0; width: 90px;
+      background: #fff; border-radius: 10px; overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,.08);
+    }
+    .phone-card-img {
+      height: 60px; background-size: cover; background-position: center;
+    }
+    .phone-card-body { padding: 6px 7px 7px; }
+    .phone-card-name { font-size: 9px; font-weight: 700; margin-bottom: 1px; }
+    .phone-card-meta { font-size: 8px; color: var(--t3); }
+    .phone-tabs {
+      margin-top: auto;
+      background: rgba(253,251,247,.95);
+      border-top: 1px solid var(--bd);
+      display: flex; padding: 6px 0 14px;
+    }
+    .phone-tab {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    .phone-tab-icon {
+      width: 16px; height: 16px; background: var(--bd); border-radius: 3px;
+    }
+    .phone-tab-icon.active { background: var(--g3); }
+    .phone-tab-label { font-size: 7px; color: var(--t3); }
+    .phone-tab-label.active { color: var(--g3); }
+    .phone-tab-scan {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: -14px;
+    }
+    .phone-tab-scan-btn {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--g2), var(--g3));
+      border-radius: 50%; display: grid; place-items: center;
+      box-shadow: 0 3px 10px rgba(45,90,39,.4); border: 2px solid var(--warm);
+    }
+    .phone-tab-scan-dot { width: 14px; height: 14px; background: rgba(255,255,255,.85); border-radius: 3px; }
+    .phone-tab-scan-lbl { font-size: 7px; color: var(--g3); font-weight: 700; }
+
+    /* ─── Section shell ─── */
+    section { padding: 5rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-tag { color: var(--g3); font-weight: 700; font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .5rem; }
+    .section-title { font-size: 2rem; font-weight: 800; margin-bottom: .8rem; }
+    .section-sub { color: var(--t2); max-width: 520px; margin-bottom: 3rem; }
+
+    /* ─── Cultural cards ─── */
+    #cultures { background: var(--cream); }
+    .cultures-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem;
+    }
+    .culture-card {
+      background: #fff; border-radius: var(--radius); overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+      cursor: pointer; transition: transform .2s, box-shadow .2s;
+    }
+    .culture-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .culture-img {
+      height: 130px; background-size: cover; background-position: center;
+      display: flex; align-items: flex-end;
+    }
+    .culture-img-inner { width: 100%; padding: 8px 12px; background: linear-gradient(to top, rgba(0,0,0,.55), transparent); }
+    .culture-season {
+      display: inline-flex; align-items: center;
+      background: rgba(255,255,255,.25); color: #fff;
+      border-radius: 99px; padding: 2px 8px; font-size: .72rem; font-weight: 600;
+    }
+    .culture-body { padding: 10px 12px 14px; }
+    .culture-name { font-size: .95rem; font-weight: 700; margin-bottom: 3px; }
+    .culture-loc { font-size: .8rem; color: var(--t3); margin-bottom: 6px; }
+    .qr-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: #e8f5e1; color: var(--g2);
+      border-radius: 99px; padding: 2px 7px; font-size: .7rem; font-weight: 700;
+    }
+
+    /* ─── Roles ─── */
+    #roles { background: var(--warm); }
+    .roles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .role-card {
+      border-radius: 20px; padding: 2rem;
+      border: 2px solid var(--bd); background: #fff;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .role-card:hover { border-color: var(--g3); box-shadow: var(--shadow); }
+    .role-card.farmer { border-color: rgba(122,92,16,.3); background: rgba(255,251,240,1); }
+    .role-card.farmer:hover { border-color: var(--earth); box-shadow: 0 4px 24px rgba(122,92,16,.12); }
+    .role-icon { font-size: 2.4rem; margin-bottom: .8rem; }
+    .role-title { font-size: 1.2rem; font-weight: 800; margin-bottom: .4rem; }
+    .role-sub { font-size: .88rem; color: var(--t2); margin-bottom: 1.4rem; }
+    .role-feats { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .role-feats li { display: flex; align-items: flex-start; gap: .5rem; font-size: .88rem; }
+    .role-feats li::before { content: '–'; color: var(--g3); font-weight: 700; flex-shrink: 0; }
+    .role-card.farmer .role-feats li::before { color: var(--earth); }
+
+    /* ─── Features grid ─── */
+    #features { background: var(--cream); }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    }
+    .feature-card {
+      background: #fff; border-radius: var(--radius); padding: 1.8rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .feature-icon { font-size: 2.2rem; margin-bottom: .8rem; }
+    .feature-title { font-weight: 700; font-size: 1.05rem; margin-bottom: .5rem; }
+    .feature-desc { font-size: .88rem; color: var(--t2); }
+
+    /* ─── How it works ─── */
+    #how { background: linear-gradient(180deg, var(--warm) 0%, #e8f5e1 100%); }
+    .how-flows { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .how-flow-title {
+      font-size: .9rem; font-weight: 700; margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .how-flow-badge {
+      padding: .2rem .7rem; border-radius: 99px; font-size: .78rem; font-weight: 700;
+    }
+    .how-flow-badge.explorer { background: rgba(74,140,63,.12); color: var(--g2); }
+    .how-flow-badge.farmer { background: rgba(122,92,16,.12); color: var(--earth); }
+    .steps { display: flex; flex-direction: column; gap: .8rem; }
+    .step {
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--g3); color: #fff;
+      display: grid; place-items: center;
+      font-weight: 800; font-size: .88rem; flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(74,140,63,.3);
+    }
+    .step-num.earth { background: var(--earth); box-shadow: 0 3px 10px rgba(122,92,16,.25); }
+    .step-body { padding-top: .3rem; }
+    .step-title { font-weight: 700; font-size: .95rem; margin-bottom: .2rem; }
+    .step-desc { font-size: .83rem; color: var(--t2); }
+
+    /* ─── Chat Demo ─── */
+    #chat-demo { background: var(--warm); }
+    .chat-wrapper {
+      display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: start;
+    }
+    .chat-info h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: .8rem; }
+    .insight-list { list-style: none; }
+    .insight-list li {
+      display: flex; gap: .7rem; align-items: flex-start;
+      padding: .6rem 0; border-bottom: 1px solid rgba(0,0,0,.06);
+      font-size: .9rem;
+    }
+    .insight-list li:last-child { border-bottom: none; }
+    .insight-list li span:first-child { font-size: 1rem; flex-shrink: 0; }
+    .chat-ui {
+      background: #fff; border-radius: 20px; overflow: hidden;
+      box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,.06);
+    }
+    .chat-header {
+      background: var(--g2); color: #fff;
+      padding: 1rem 1.5rem; display: flex; align-items: center; gap: .7rem;
+    }
+    .chat-header .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--g4); }
+    .chat-header-title { font-weight: 700; font-size: .95rem; }
+    .chat-messages { padding: 1.2rem; min-height: 260px; max-height: 320px; overflow-y: auto; }
+    .chat-msg { display: flex; gap: .6rem; margin-bottom: 1rem; align-items: flex-start; }
+    .chat-msg.user { flex-direction: row-reverse; }
+    .chat-av {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: grid; place-items: center; font-size: .85rem; flex-shrink: 0;
+    }
+    .chat-av.ai  { background: var(--g3); color: #fff; }
+    .chat-av.usr { background: var(--earth); color: #fff; }
+    .chat-bub {
+      max-width: 75%; background: var(--cream); padding: .6rem .9rem;
+      border-radius: 12px; font-size: .85rem; line-height: 1.55;
+    }
+    .chat-msg.user .chat-bub { background: var(--g3); color: #fff; }
+    .chat-typing { display: flex; align-items: center; gap: .3rem; padding: .5rem .9rem; background: var(--cream); border-radius: 12px; width: fit-content; }
+    .chat-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--g4); animation: blink 1.2s infinite; }
+    .chat-typing span:nth-child(2) { animation-delay: .2s; }
+    .chat-typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes blink { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
+    .chat-quick {
+      display: flex; gap: .5rem; padding: .6rem 1rem; border-top: 1px solid var(--bd);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .chat-quick::-webkit-scrollbar { display: none; }
+    .chat-qb {
+      flex-shrink: 0; padding: 5px 12px;
+      border: 1.5px solid rgba(74,140,63,.2); border-radius: 99px;
+      font-size: .82rem; cursor: pointer; color: var(--g2); font-weight: 500;
+      background: #fff; transition: background .15s, color .15s;
+      white-space: nowrap;
+    }
+    .chat-qb:hover { background: var(--g3); color: #fff; border-color: var(--g3); }
+    .chat-input-row {
+      border-top: 1px solid rgba(0,0,0,.07); padding: .8rem 1rem;
+      display: flex; gap: .7rem;
+    }
+    .chat-input {
+      flex: 1; border: 1.5px solid var(--bd); border-radius: 99px;
+      padding: .5rem 1rem; font-size: .88rem; outline: none;
+      transition: border-color .2s; font-family: inherit;
+    }
+    .chat-input:focus { border-color: var(--g3); }
+    .chat-send {
+      background: var(--g3); color: #fff; border: none;
+      border-radius: 99px; padding: .5rem 1.1rem; cursor: pointer;
+      font-size: .88rem; font-weight: 600; transition: background .2s;
+    }
+    .chat-send:hover { background: var(--g2); }
+
+    /* ─── Itinerary generator ─── */
+    #itinerary { background: var(--cream); }
+    .itin-wrap { display: grid; grid-template-columns: 1fr 1.3fr; gap: 3rem; align-items: start; }
+    .itin-form label { display: block; font-size: .85rem; font-weight: 600; color: var(--t2); margin-bottom: .4rem; }
+    .itin-form select {
+      width: 100%; padding: .6rem 1rem; border-radius: 10px;
+      border: 1.5px solid var(--bd); background: #fff; font-size: .9rem;
+      margin-bottom: 1rem; outline: none; transition: border-color .2s; font-family: inherit;
+    }
+    .itin-form select:focus { border-color: var(--g3); }
+    .itin-form h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 1.2rem; }
+    .itin-result {
+      background: #fff; border-radius: var(--radius); padding: 1.5rem;
+      box-shadow: var(--shadow); min-height: 300px;
+    }
+    .itin-result-placeholder {
+      height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: var(--t2); text-align: center; padding: 2rem;
+    }
+    .itin-result-placeholder .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .day-block { margin-bottom: 1.4rem; }
+    .day-label { font-weight: 800; color: var(--g2); margin-bottom: .5rem; font-size: .95rem; }
+    .day-item { display: flex; gap: .7rem; align-items: flex-start; margin-bottom: .5rem; }
+    .day-time { font-size: .78rem; color: var(--earth); font-weight: 600; min-width: 3.5rem; }
+    .day-text { font-size: .85rem; }
+    .season-badge {
+      display: inline-block; background: rgba(74,140,63,.12); color: var(--g2);
+      padding: .2rem .7rem; border-radius: 99px; font-size: .78rem; font-weight: 600; margin-bottom: 1rem;
+    }
+    .itin-loading { text-align: center; padding: 2rem; }
+    .spinner {
+      width: 36px; height: 36px; border: 3px solid var(--cream);
+      border-top-color: var(--g3); border-radius: 50%;
+      animation: spin .8s linear infinite; margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── QR Experience ─── */
+    #qr { background: var(--warm); }
+    .qr-wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; }
+    .qr-visual {
+      background: linear-gradient(135deg, var(--g2) 0%, var(--g3) 100%);
+      border-radius: 20px; padding: 2.5rem; text-align: center; color: #fff;
+    }
+    .qr-code-mockup {
+      width: 140px; height: 140px; background: #fff; border-radius: 12px;
+      margin: 0 auto 1.5rem; display: grid; place-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    }
+    .qr-grid {
+      width: 100px; height: 100px;
+      background: repeating-conic-gradient(var(--g2) 0% 25%, #fff 25% 50%) 0 0 / 10px 10px;
+      border-radius: 4px;
+    }
+    .qr-visual h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: .5rem; }
+    .qr-visual p { font-size: .85rem; opacity: .85; }
+    .qr-features { list-style: none; }
+    .qr-features li {
+      display: flex; gap: .7rem; align-items: flex-start;
+      padding: .8rem 0; border-bottom: 1px solid rgba(0,0,0,.07);
+      font-size: .9rem;
+    }
+    .qr-features li:last-child { border-bottom: none; }
+    .qr-features li .icon { font-size: 1.2rem; flex-shrink: 0; }
+
+    /* ─── Footer ─── */
+    footer {
+      background: var(--g2); color: rgba(255,255,255,.75);
+      padding: 3rem 2rem; text-align: center; font-size: .88rem;
+    }
+    footer .footer-title { color: #fff; font-weight: 800; font-size: 1.1rem; margin-bottom: .5rem; }
+    footer .footer-sub { margin-bottom: 1.5rem; }
+    footer .footer-tags { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+    footer .tag { background: rgba(255,255,255,.12); padding: .3rem .8rem; border-radius: 99px; font-size: .78rem; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .hero-inner, .chat-wrapper, .itin-wrap, .qr-wrap, .how-flows { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2rem; }
+      .nav-links { display: none; }
+      .cultures-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <div class="nav-logo">
+    台灣農業文化體驗平台
+  </div>
+  <div class="nav-links">
+    <a href="#cultures">精選文化</a>
+    <a href="#roles">使用身份</a>
+    <a href="#features">功能介紹</a>
+    <a href="#chat-demo">AI 問答</a>
+    <a href="#itinerary">行程規劃</a>
+  </div>
+  <a href="prototype.html" class="nav-cta">查看 Prototype</a>
+</nav>
+
+<!-- ── Hero ── -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">AI for Cultural Heritage</div>
+      <h1 class="hero-title">
+        讓農業文化<br>
+        不只是「看」，<br>
+        而是<em>真正體驗</em>
+      </h1>
+      <p class="hero-sub">
+        用 AI 把台灣農業文化從難懂的官方資訊，
+        轉成你可以理解、規劃、並親身踏入的旅遊體驗。
+        體驗者找行程，農民發布活動，一個平台兩種角色。
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('itinerary').scrollIntoView({behavior:'smooth'})">
+          規劃我的農業文化行程
+        </button>
+        <button class="btn-secondary" onclick="window.location.href='prototype.html'">
+          查看 App Prototype
+        </button>
+      </div>
+    </div>
+
+    <!-- Phone mockup -->
+    <div class="hero-phone-wrap">
+      <div class="hero-phone">
+        <div class="hero-screen">
+          <div class="hero-island"></div>
+          <div class="phone-home">
+            <div class="phone-topbar">
+              <div class="phone-greeting">早安</div>
+              <div class="phone-title">探索<span>農業文化</span></div>
+            </div>
+            <div class="phone-search">搜尋農業文化、地點、季節…</div>
+            <div class="phone-banner">
+              <div class="phone-banner-lbl">現在是秋茶季</div>
+              <div class="phone-banner-title">高山烏龍 正在採收</div>
+              <div class="phone-banner-sub">南投・阿里山・坪林 限時體驗 →</div>
+            </div>
+            <div class="phone-sec">本季推薦</div>
+            <div class="phone-cards">
+              <div class="phone-card">
+                <div class="phone-card-img" style="background-image:url('assets/高山茶文化.png')"></div>
+                <div class="phone-card-body">
+                  <div class="phone-card-name">高山茶文化</div>
+                  <div class="phone-card-meta">南投 · 秋茶季</div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-img" style="background-image:url('assets/池上稻米文化.png')"></div>
+                <div class="phone-card-body">
+                  <div class="phone-card-name">池上稻米文化</div>
+                  <div class="phone-card-meta">台東 · 二期收割</div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-img" style="background-image:url('assets/阿美族豐年祭.png')"></div>
+                <div class="phone-card-body">
+                  <div class="phone-card-name">阿美族豐年祭</div>
+                  <div class="phone-card-meta">花蓮 · 7–8月</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-tabs">
+              <div class="phone-tab">
+                <div class="phone-tab-icon active"></div>
+                <div class="phone-tab-label active">首頁</div>
+              </div>
+              <div class="phone-tab">
+                <div class="phone-tab-icon"></div>
+                <div class="phone-tab-label">瀏覽</div>
+              </div>
+              <div class="phone-tab-scan">
+                <div class="phone-tab-scan-btn">
+                  <div class="phone-tab-scan-dot"></div>
+                </div>
+                <div class="phone-tab-scan-lbl">掃描</div>
+              </div>
+              <div class="phone-tab">
+                <div class="phone-tab-icon"></div>
+                <div class="phone-tab-label">行程</div>
+              </div>
+              <div class="phone-tab">
+                <div class="phone-tab-icon"></div>
+                <div class="phone-tab-label">個人</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Cultural Cards ── -->
+<section id="cultures">
+  <div class="section-inner">
+    <div class="section-tag">Cultural Library</div>
+    <h2 class="section-title">精選農業文化主題</h2>
+    <p class="section-sub">從茶山到稻田、從原住民祭典到傳統工藝，六大農業文化主題，每個都有 AI 深度解說與季節體驗建議。</p>
+    <div class="cultures-grid">
+      <div class="culture-card">
+        <div class="culture-img" style="background-image:url('assets/高山茶文化.png')">
+          <div class="culture-img-inner">
+            <span class="culture-season">秋茶季 9–11月</span>
+          </div>
+        </div>
+        <div class="culture-body">
+          <div class="culture-name">高山茶文化</div>
+          <div class="culture-loc">南投・阿里山・坪林</div>
+          <div><span class="qr-badge">QR 現場導覽</span></div>
+        </div>
+      </div>
+      <div class="culture-card">
+        <div class="culture-img" style="background-image:url('assets/池上稻米文化.png')">
+          <div class="culture-img-inner">
+            <span class="culture-season">秋收 9–10月</span>
+          </div>
+        </div>
+        <div class="culture-body">
+          <div class="culture-name">池上稻米文化</div>
+          <div class="culture-loc">台東・花蓮</div>
+          <div><span class="qr-badge">QR 現場導覽</span></div>
+        </div>
+      </div>
+      <div class="culture-card">
+        <div class="culture-img" style="background-image:url('assets/阿美族豐年祭.png')">
+          <div class="culture-img-inner">
+            <span class="culture-season">豐年祭 7–8月</span>
+          </div>
+        </div>
+        <div class="culture-body">
+          <div class="culture-name">阿美族豐年祭</div>
+          <div class="culture-loc">花蓮・台東</div>
+        </div>
+      </div>
+      <div class="culture-card">
+        <div class="culture-img" style="background-image:url('assets/柿子文化.png')">
+          <div class="culture-img-inner">
+            <span class="culture-season">柿子季 10–11月</span>
+          </div>
+        </div>
+        <div class="culture-body">
+          <div class="culture-name">柿子文化</div>
+          <div class="culture-loc">苗栗・新竹</div>
+        </div>
+      </div>
+      <div class="culture-card">
+        <div class="culture-img" style="background-image:url('assets/鳳梨文化.png')">
+          <div class="culture-img-inner">
+            <span class="culture-season">鳳梨季 5–8月</span>
+          </div>
+        </div>
+        <div class="culture-body">
+          <div class="culture-name">鳳梨文化</div>
+          <div class="culture-loc">台南・屏東</div>
+        </div>
+      </div>
+      <div class="culture-card">
+        <div class="culture-img" style="background-image:url('assets/竹藝傳統工藝.png')">
+          <div class="culture-img-inner">
+            <span class="culture-season">全年體驗</span>
+          </div>
+        </div>
+        <div class="culture-body">
+          <div class="culture-name">竹藝傳統工藝</div>
+          <div class="culture-loc">南投竹山・嘉義</div>
+          <div><span class="qr-badge">QR 現場導覽</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Two Roles ── -->
+<section id="roles">
+  <div class="section-inner">
+    <div class="section-tag">Two Roles</div>
+    <h2 class="section-title">兩種使用身份</h2>
+    <p class="section-sub">平台同時服務農業文化旅遊者與農場主，根據你的身份提供完全不同的功能介面。</p>
+    <div class="roles-grid">
+      <div class="role-card">
+        <div class="role-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="8" width="22" height="14" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg></div>
+        <div class="role-title">體驗者</div>
+        <div class="role-sub">對台灣農業文化感興趣的旅遊者，尤其是外國旅客與想深度旅遊的國內訪客。</div>
+        <ul class="role-feats">
+          <li>AI 農業文化對話問答，秒懂農業知識</li>
+          <li>依月份與興趣生成季節限定農業行程</li>
+          <li>行程含地圖路線，避免距離問題</li>
+          <li>收藏行程與偏好管理</li>
+          <li>到場掃 QR Code，啟動 AI 文化導覽</li>
+        </ul>
+      </div>
+      <div class="role-card farmer">
+        <div class="role-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M17 5c1-2 3-2 3 0s-2 2-3 0"/></svg></div>
+        <div class="role-title">農民</div>
+        <div class="role-sub">提供農業體驗的農場主，希望讓更多訪客認識自己的土地與文化故事。</div>
+        <ul class="role-feats">
+          <li>發布農場體驗活動，設定開放時段</li>
+          <li>查看瀏覽數與預約統計</li>
+          <li>AI 一鍵生成商品文案與農業故事</li>
+          <li>AI 生成農場角色設定（品牌化）</li>
+          <li>農場資訊與文化類別管理</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ── -->
+<section id="features">
+  <div class="section-inner">
+    <div class="section-tag">Platform Features</div>
+    <h2 class="section-title">六大核心功能</h2>
+    <p class="section-sub">每個功能都直接對應真實需求，不是通用模板，而是真正為「農業文化體驗」設計的系統。</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.66z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.66z"/></svg></div>
+        <div class="feature-title">AI 農業文化理解</div>
+        <div class="feature-desc">用最生活化的方式解釋農業文化——這個作物為什麼種這裡？什麼季節最重要？有什麼文化意義？可以直接對話提問。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <div class="feature-title">季節導向行程生成</div>
+        <div class="feature-desc">輸入你想去的時間，AI 自動判斷當季農業活動（採茶、插秧、豐年祭…），生成最對時機的行程，不再錯過季節。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div>
+        <div class="feature-title">地圖 + 路線整合</div>
+        <div class="feature-desc">農業景點分散全台，系統自動避免「今天台東、明天澎湖」的距離問題，行程含 Leaflet 地圖與時間軸，可拖曳排序。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5"/></svg></div>
+        <div class="feature-title">現場 QR Code 體驗</div>
+        <div class="feature-desc">到達農場、茶園或文化景點後，掃描 QR Code，AI 立刻化身現場導覽員，說故事、解釋農法、支援多語言。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+        <div class="feature-title">AI 農場文案生成</div>
+        <div class="feature-desc">農民輸入產品名稱與特色，AI 自動生成商品文案、農業故事與品牌角色設定，一鍵複製直接使用。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></div>
+        <div class="feature-title">農場活動管理</div>
+        <div class="feature-desc">農民可發布體驗活動、設定開放時段，並查看活動瀏覽數與預約人次，掌握農場曝光成效。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How it works ── -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-tag">User Journey</div>
+    <h2 class="section-title">從「不懂農業」到「親身體驗」</h2>
+    <p class="section-sub">兩種角色，各自完整的一站式旅程。</p>
+    <div class="how-flows">
+      <div>
+        <div class="how-flow-title">
+          <span class="how-flow-badge explorer">體驗者流程</span>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">問 AI 了解農業文化</div>
+              <div class="step-desc">輸入你好奇的農業主題，AI 用人話解釋，支援中英日三語</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">設定月份與興趣</div>
+              <div class="step-desc">AI 根據季節推薦最適合的體驗與地點，自動避免錯季</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">取得地圖行程</div>
+              <div class="step-desc">含地圖路線、時間軸、景點說明，可拖曳排序與收藏</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">到現場掃碼體驗</div>
+              <div class="step-desc">掃 QR Code 啟動 AI 導覽，隨時問問題，了解農場文化故事</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="how-flow-title">
+          <span class="how-flow-badge farmer">農民流程</span>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num earth">1</div>
+            <div class="step-body">
+              <div class="step-title">建立農場檔案</div>
+              <div class="step-desc">設定農場基本資訊、農業類別與可開放體驗時段</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num earth">2</div>
+            <div class="step-body">
+              <div class="step-title">發布體驗活動</div>
+              <div class="step-desc">新增採茶、農事或工藝體驗活動，設定名額與時間</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num earth">3</div>
+            <div class="step-body">
+              <div class="step-title">AI 生成文案與故事</div>
+              <div class="step-desc">輸入產品特色，AI 自動產出商品文案、農業故事、品牌角色</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num earth">4</div>
+            <div class="step-body">
+              <div class="step-title">查看曝光與預約</div>
+              <div class="step-desc">追蹤活動瀏覽數、預約人次，掌握農場經營成效</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Chat Demo ── -->
+<section id="chat-demo">
+  <div class="section-inner">
+    <div class="section-tag">AI Understanding</div>
+    <h2 class="section-title">問 AI，馬上看懂農業文化</h2>
+    <p class="section-sub">不用再對著官方網站的官腔文字發呆。</p>
+    <div class="chat-wrapper">
+      <div class="chat-info">
+        <h3>使用者研究顯示：大家卡在哪？</h3>
+        <ul class="insight-list">
+          <li><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span>不會用文化官網，習慣先 Google</span></li>
+          <li><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>官方內容「字太多、找不到重點」</span></li>
+          <li><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span>有圖片想去，但資訊不夠，無法排行程</span></li>
+          <li><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M8 13h8"/></svg></span><span>幾乎所有人都希望有 AI 幫忙整理推薦</span></li>
+          <li><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span>對地點距離完全沒有概念</span></li>
+        </ul>
+      </div>
+
+      <div class="chat-ui">
+        <div class="chat-header">
+          <div class="dot"></div>
+          <div class="chat-header-title">農業文化 AI</div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-msg ai">
+            <div class="chat-av ai"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 19.5"/><path d="M21 8c-1.5 5-5 8-10 10"/><path d="M12 2c0 6-4 8-4 14"/></svg></div>
+            <div class="chat-bub">你好！我是台灣農業文化 AI。你可以問我任何關於台灣農業文化的問題——季節、地點、習俗、體驗都可以！</div>
+          </div>
+        </div>
+        <div class="chat-quick" id="chatQuick">
+          <div class="chat-qb" onclick="quickChat('茶文化是什麼')">茶文化</div>
+          <div class="chat-qb" onclick="quickChat('豐年祭什麼時候')">豐年祭</div>
+          <div class="chat-qb" onclick="quickChat('稻米文化怎麼體驗')">稻米文化</div>
+          <div class="chat-qb" onclick="quickChat('外國人適合嗎')">外國人適合嗎</div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" class="chat-input" id="chatInput" placeholder="例如：10月去台灣適合什麼農業體驗？" onkeydown="if(event.key==='Enter')sendChat()" />
+          <button class="chat-send" onclick="sendChat()">送出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Itinerary ── -->
+<section id="itinerary">
+  <div class="section-inner">
+    <div class="section-tag">Seasonal Itinerary</div>
+    <h2 class="section-title">AI 幫你生成季節限定農業行程</h2>
+    <p class="section-sub">告訴我你什麼時候來、想體驗什麼，AI 幫你排出對的時機、對的地方。</p>
+    <div class="itin-wrap">
+      <div class="itin-form">
+        <h3>設定你的旅程</h3>
+        <label>旅行月份</label>
+        <select id="travelMonth">
+          <option value="">請選擇月份</option>
+          <option value="1">1 月 — 採龍眼、柳橙產季</option>
+          <option value="2">2 月 — 油菜花、春耕準備</option>
+          <option value="3">3 月 — 春茶採收、花季</option>
+          <option value="4">4 月 — 春茶、梅子採收</option>
+          <option value="5">5 月 — 西瓜、鳳梨旺季</option>
+          <option value="6">6 月 — 荔枝、台灣芒果</option>
+          <option value="7">7 月 — 稻米第一期收割、豐年祭</option>
+          <option value="8">8 月 — 原住民豐年祭盛季</option>
+          <option value="9">9 月 — 稻米第二期收割</option>
+          <option value="10">10 月 — 秋茶季、紅柿採收</option>
+          <option value="11">11 月 — 高麗菜、冬茶</option>
+          <option value="12">12 月 — 草莓季開始、柑橘</option>
+        </select>
+
+        <label>主要興趣</label>
+        <select id="interest">
+          <option value="">請選擇</option>
+          <option value="tea">茶文化（採茶 / 製茶 / 茶道）</option>
+          <option value="rice">稻米文化（插秧 / 曬穀 / 農村生活）</option>
+          <option value="indigenous">原住民農業祭典（豐年祭 / 小米文化）</option>
+          <option value="fruit">熱帶果物農場體驗</option>
+          <option value="general">綜合農業文化</option>
+        </select>
+
+        <label>旅行天數</label>
+        <select id="days">
+          <option value="1">1 天（半日 / 一日遊）</option>
+          <option value="2" selected>2 天 1 夜</option>
+          <option value="3">3 天 2 夜</option>
+        </select>
+
+        <label>出發城市</label>
+        <select id="startCity">
+          <option value="taipei">台北</option>
+          <option value="taichung">台中</option>
+          <option value="kaohsiung">高雄</option>
+        </select>
+
+        <button class="btn-primary" onclick="generateItinerary()" style="width:100%;margin-top:.5rem">
+          生成季節農業行程
+        </button>
+      </div>
+
+      <div class="itin-result" id="itinResult">
+        <div class="itin-result-placeholder" id="itinPlaceholder">
+          <div class="icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <p>選好條件後，AI 會幫你生成<br>專屬農業文化季節行程</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── QR Experience ── -->
+<section id="qr">
+  <div class="section-inner">
+    <div class="section-tag">On-site Experience</div>
+    <h2 class="section-title">到了現場，掃碼啟動文化導覽</h2>
+    <p class="section-sub">農場、茶園、部落——每個地點都有自己的故事，AI 幫你說出來。</p>
+    <div class="qr-wrap">
+      <div class="qr-visual">
+        <div class="qr-code-mockup">
+          <div class="qr-grid"></div>
+        </div>
+        <h3>掃描 QR Code</h3>
+        <p>「阿里山達邦茶園」<br>海拔 1,400m · 鄒族傳統農地</p>
+        <div style="margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.2)">
+          <div style="font-size:.82rem;opacity:.7;margin-bottom:.5rem">AI 正在說故事…</div>
+          <div style="font-size:.88rem;background:rgba(255,255,255,.12);border-radius:10px;padding:.8rem">
+            「這裡的茶樹已有 80 年以上樹齡，是鄒族部落在日治時期保留下來的古老茶園。這片土地，承載著超過三個世代的農耕記憶…」
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <ul class="qr-features">
+          <li>
+            <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+            <div>
+              <strong>文化故事即時解說</strong>
+              <br><span style="font-size:.83rem;color:var(--t2)">這個地方的農業歷史、族群背景、土地故事</span>
+            </div>
+          </li>
+          <li>
+            <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></span>
+            <div>
+              <strong>AI 語音導覽（中 / 英 / 日）</strong>
+              <br><span style="font-size:.83rem;color:var(--t2)">外國旅客也能完整理解，支援多語言</span>
+            </div>
+          </li>
+          <li>
+            <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.5"/></svg></span>
+            <div>
+              <strong>現場問答對話</strong>
+              <br><span style="font-size:.83rem;color:var(--t2)">「這是什麼作物？」「為什麼這樣種？」隨時問</span>
+            </div>
+          </li>
+          <li>
+            <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 19.5"/><path d="M21 8c-1.5 5-5 8-10 10"/><path d="M12 2c0 6-4 8-4 14"/></svg></span>
+            <div>
+              <strong>農產品文化連結</strong>
+              <br><span style="font-size:.83rem;color:var(--t2)">了解產品背後的文化脈絡，讓消費有意義</span>
+            </div>
+          </li>
+          <li>
+            <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+            <div>
+              <strong>打卡與分享</strong>
+              <br><span style="font-size:.83rem;color:var(--t2)">產生文化背景說明，讓你的 IG 不只有美照</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-title">台灣農業文化體驗平台</div>
+  <div class="footer-sub">AI for Cultural Heritage · 使用者體驗設計期末專案</div>
+  <div class="footer-tags">
+    <span class="tag">AI 文化轉譯</span>
+    <span class="tag">季節行程生成</span>
+    <span class="tag">QR Code 現場導覽</span>
+    <span class="tag">體驗者 / 農民雙角色</span>
+    <span class="tag">農民 AI 文案生成</span>
+    <span class="tag">外國旅客友善</span>
+  </div>
+  <div>Prototype · 2026 · UX Design Course Final Project</div>
+</footer>
+
+<script>
+/* ─── Chat Demo ─── */
+const chatResponses = {
+  default: [
+    "台灣的農業文化非常多元！從平地的稻米文化、山區的茶文化，到原住民部落的小米農耕，每一種都有獨特的季節節奏和文化意義。你最想了解哪一種？",
+    "台灣因為地形多樣（海拔從 0 到 3,952m），農業文化也特別豐富——光是茶就有高山烏龍、東方美人、凍頂等不同風格，背後都有深厚的地方文化。",
+    "農業文化的魅力在於它有「時間感」——每個季節都有不同的農事活動，錯過了就要等明年。這也是為什麼了解季節，對農業文化旅遊特別重要。"
+  ],
+  茶: "台灣高山茶文化發展於清末，在海拔 1000m 以上的山區種植。每年有春茶（3-5月）、夏茶（6-8月）、秋茶（9-11月）、冬茶（11-12月）四個採收季。其中秋茶和冬茶最珍貴，採茶是純手工作業，一名熟練茶農一天只能採約 3 公斤！最好的體驗地點是南投鹿谷（凍頂烏龍）或阿里山（高山烏龍）。",
+  稻米: "台灣一年可以收穫兩季稻米——第一期（2-7月）和第二期（7-11月）。台東池上是稻米農業景觀代表地，每到收割季節整片稻田金黃，非常壯觀。農村生活中插秧、割稻、曬穀都是難得的體驗，部分農場還提供遊客實際參與的農事體驗。",
+  豐年祭: "豐年祭（ilisiin）是台灣原住民阿美族最重要的農業祭典，在每年 7-8 月稻米收成後舉行。它不只是慶典，更是凝聚族人、感謝土地的重要儀式。花蓮秀姑巒溪沿岸的阿美族部落，豐年祭最為盛大。外國訪客需提前聯繫部落，以示尊重。",
+  外國: "非常適合！平台支援中、英、日三語 AI 導覽，到現場掃描 QR Code 後即可切換語言。農業文化是台灣最真實、最有溫度的體驗之一，比起一般觀光景點更能深入理解台灣。"
+};
+
+function quickChat(msg) {
+  document.getElementById('chatInput').value = msg;
+  sendChat();
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  const container = document.getElementById('chatMessages');
+
+  container.innerHTML += `
+    <div class="chat-msg user">
+      <div class="chat-av usr"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <div class="chat-bub">${escapeHtml(msg)}</div>
+    </div>`;
+
+  const typingId = 'typing-' + Date.now();
+  container.innerHTML += `
+    <div class="chat-msg ai" id="${typingId}">
+      <div class="chat-av ai"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 19.5"/><path d="M12 2c0 6-4 8-4 14"/></svg></div>
+      <div class="chat-typing"><span></span><span></span><span></span></div>
+    </div>`;
+
+  input.value = '';
+  container.scrollTop = container.scrollHeight;
+
+  let reply = chatResponses.default[Math.floor(Math.random() * chatResponses.default.length)];
+  for (const [key, val] of Object.entries(chatResponses)) {
+    if (key !== 'default' && msg.includes(key)) { reply = val; break; }
+  }
+
+  setTimeout(() => {
+    document.getElementById(typingId)?.remove();
+    container.innerHTML += `
+      <div class="chat-msg ai">
+        <div class="chat-av ai"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 19.5"/><path d="M12 2c0 6-4 8-4 14"/></svg></div>
+        <div class="chat-bub">${reply}</div>
+      </div>`;
+    container.scrollTop = container.scrollHeight;
+  }, 1200);
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ─── Itinerary Generator ─── */
+const itinData = {
+  tea: {
+    spring:  { season: '春茶季（3–5月）', spots: ['南投鹿谷凍頂茶山', '阿里山達邦茶園', '坪林茶業博物館'] },
+    summer:  { season: '夏茶季（6–8月）', spots: ['新竹峨眉東方美人茶', '苗栗頭份茶區', '桃園龍潭茶園'] },
+    autumn:  { season: '秋茶季（9–11月）', spots: ['阿里山高山烏龍', '南投魚池紅茶', '坪林文山包種茶'] },
+    winter:  { season: '冬茶季（11–12月）', spots: ['梨山高冷茶', '福壽山茶園', '武陵農場周邊'] }
+  },
+  rice: {
+    spring:  { season: '春耕插秧（2–4月）', spots: ['花蓮富里六十石山', '台東池上稻田', '宜蘭三星農村'] },
+    summer:  { season: '一期稻米收割（6–7月）', spots: ['台東池上稻海', '花蓮萬榮農場', '高雄美濃客家庄'] },
+    autumn:  { season: '二期稻米收割（9–10月）', spots: ['台南白河蓮田轉稻田', '嘉義民雄稻田', '台中后里農村'] },
+    winter:  { season: '農閒文化季（11–1月）', spots: ['雲林西螺醬油文化', '嘉義布袋鹽田轉型', '台南關廟農村'] }
+  },
+  indigenous: {
+    spring:  { season: '播種祭典（4–5月）', spots: ['台東知本部落', '花蓮光復馬太鞍', '屏東霧台魯凱族'] },
+    summer:  { season: '豐年祭盛季（7–8月）', spots: ['花蓮阿美族部落', '台東都蘭部落', '台東富里族群聚落'] },
+    autumn:  { season: '收穫感恩祭（9–10月）', spots: ['南投信義鄉布農族', '嘉義阿里山鄒族', '桃園復興鄉泰雅族'] },
+    winter:  { season: '小米文化探訪（11–2月）', spots: ['台東海端布農族', '屏東瑪家文化園區', '南投仁愛鄉賽德克族'] }
+  },
+  fruit: {
+    spring:  { season: '草莓 / 梅子季（3–5月）', spots: ['苗栗大湖草莓園', '南投信義梅子夢工廠', '台中后豐果園'] },
+    summer:  { season: '芒果 / 荔枝季（6–8月）', spots: ['台南玉井芒果之鄉', '高雄大樹荔枝園', '屏東熱帶農業博覽區'] },
+    autumn:  { season: '柑橘 / 柿子季（9–11月）', spots: ['苗栗西湖柿子節', '台中東勢柑橘農場', '宜蘭礁溪柚子採果'] },
+    winter:  { season: '草莓 / 柑橘高峰（12–2月）', spots: ['苗栗大湖冬季草莓', '台南麻豆文旦', '嘉義中埔山區柑橘'] }
+  },
+  general: {
+    spring:  { season: '春耕 × 春茶 × 花季（3–5月）', spots: ['南投日月潭農村', '阿里山茶山部落', '花蓮富里田野'] },
+    summer:  { season: '豐年祭 × 熱帶水果（6–8月）', spots: ['台東熱帶農業', '花蓮原住民部落', '屏東農業生態區'] },
+    autumn:  { season: '秋收 × 秋茶（9–11月）', spots: ['台南關廟稻田', '南投茶鄉', '宜蘭農村民宿'] },
+    winter:  { season: '冬茶 × 草莓 × 柑橘（11–2月）', spots: ['苗栗農業三角', '梨山高冷蔬果', '台南白河農村'] }
+  }
+};
+
+function getSeason(month) {
+  const m = parseInt(month);
+  if (m >= 3 && m <= 5) return 'spring';
+  if (m >= 6 && m <= 8) return 'summer';
+  if (m >= 9 && m <= 11) return 'autumn';
+  return 'winter';
+}
+
+const daysSchedule = {
+  1: [
+    { time: '08:00', text: '從出發城市搭車前往' },
+    { time: '10:00', text: '抵達第一個農業文化景點，AI QR Code 導覽啟動' },
+    { time: '12:00', text: '在地農家料理午餐，了解農產品與飲食文化的連結' },
+    { time: '14:00', text: '農事體驗（採茶 / 採果 / 農村工藝，依季節）' },
+    { time: '16:30', text: '掃 QR Code：了解農場背後的文化故事' },
+    { time: '17:30', text: '返程' }
+  ],
+  2: [
+    { time: 'Day 1 09:00', text: '出發前往主要農業文化區，AI 介紹當地背景' },
+    { time: 'Day 1 11:00', text: '抵達第一景點，QR Code 導覽' },
+    { time: 'Day 1 13:00', text: '在地農家午餐' },
+    { time: 'Day 1 15:00', text: '農事體驗（依季節活動）' },
+    { time: 'Day 1 18:00', text: '農村民宿 check-in，夜間農村文化分享' },
+    { time: 'Day 2 08:00', text: '早晨農場巡禮' },
+    { time: 'Day 2 10:00', text: '第二個農業文化景點' },
+    { time: 'Day 2 13:00', text: '農特產伴手禮選購，了解農產品品牌故事' },
+    { time: 'Day 2 15:00', text: '返程' }
+  ],
+  3: [
+    { time: 'Day 1 09:00', text: '出發，AI 介紹行程主題農業文化背景' },
+    { time: 'Day 1 11:00', text: '第一區農業景點 + QR Code 體驗' },
+    { time: 'Day 1 14:00', text: '農事體驗工作坊（親手做）' },
+    { time: 'Day 1 18:00', text: '農村民宿，聆聽農家故事' },
+    { time: 'Day 2 08:00', text: '前往第二區（另一種農業文化類型）' },
+    { time: 'Day 2 11:00', text: '參與當季農業活動（插秧 / 採茶 / 祭典…）' },
+    { time: 'Day 2 14:00', text: '文化工藝體驗（竹編 / 染布 / 製茶）' },
+    { time: 'Day 2 18:00', text: '在地聚落晚餐，與農民對談' },
+    { time: 'Day 3 09:00', text: '最後農業景點 + 農特產市集' },
+    { time: 'Day 3 12:00', text: '農家午餐後返程' }
+  ]
+};
+
+function generateItinerary() {
+  const month = document.getElementById('travelMonth').value;
+  const interest = document.getElementById('interest').value;
+  const days = document.getElementById('days').value;
+  const city = document.getElementById('startCity').value;
+
+  if (!month || !interest) {
+    alert('請選擇月份與興趣方向！');
+    return;
+  }
+
+  const result = document.getElementById('itinResult');
+  result.innerHTML = `<div class="itin-loading"><div class="spinner"></div><p style="color:var(--t2)">AI 正在根據季節生成行程…</p></div>`;
+
+  setTimeout(() => {
+    const season = getSeason(month);
+    const data = itinData[interest][season];
+    const schedule = daysSchedule[days];
+    const cityName = { taipei: '台北', taichung: '台中', kaohsiung: '高雄' }[city];
+    const monthNames = ['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+    let spotsHtml = data.spots.map((s,i) => `
+      <div class="day-item">
+        <span class="day-time">景點 ${i+1}</span>
+        <span class="day-text">${s}</span>
+      </div>`).join('');
+
+    let scheduleHtml = schedule.map(s => `
+      <div class="day-item">
+        <span class="day-time">${s.time}</span>
+        <span class="day-text">${s.text}</span>
+      </div>`).join('');
+
+    result.innerHTML = `
+      <div class="season-badge">${data.season}</div>
+      <div style="font-weight:800;font-size:1rem;margin-bottom:1rem;color:var(--g2)">
+        出發城市：${cityName} &nbsp;|&nbsp; ${monthNames[month]} &nbsp;|&nbsp; ${days} 天
+      </div>
+      <div class="day-block">
+        <div class="day-label">AI 推薦景點</div>
+        ${spotsHtml}
+      </div>
+      <div class="day-block">
+        <div class="day-label">行程時間表</div>
+        ${scheduleHtml}
+      </div>
+      <div style="margin-top:1rem;padding:.8rem;background:rgba(74,140,63,.08);border-radius:8px;font-size:.82rem;color:var(--g2)">
+        到現場後，掃描各景點的 QR Code 即可啟動 AI 文化導覽
+      </div>`;
+  }, 1400);
+}
+</script>
+</body>
+</html>
